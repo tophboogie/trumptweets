@@ -1,0 +1,23 @@
+{
+  "name": "trumptweets",
+  "version": "1.0.0",
+  "description": "A Twitter scraper that logs Trump's emotional state via IBM Watson API",
+  "main": "serverAPI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tophboogie/trumptweets.git"
+  },
+  "author": "Topher Wright",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tophboogie/trumptweets/issues"
+  },
+  "homepage": "https://github.com/tophboogie/trumptweets#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongoose": "^4.6.8"
+  }
+}
