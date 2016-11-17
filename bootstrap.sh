@@ -11,9 +11,11 @@ apt-get update
 apt-get install -y mongodb-org
 cp /vagrant/mongod.service /lib/systemd/system/mongod.service
 
-
 # npm-check-updates auto-updater
 npm install -g npm-check-updates
 
 # nodejs pm2 module
 # npm install -g pm2
+
+# set up environment variables
+cp /vagrant/credentials.sh /etc/profile.d/credentials.sh

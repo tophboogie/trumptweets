@@ -5,7 +5,8 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
 - Install Vagrant Plugins
     - `vagrant plugin install vagrant-vbguest` (to sync guest-additions installation automatically)
     - `vagrant plugin install vagrant-notify-forwarder` (to ensure file updates are registered by the box)
-- Use:
+- Rename 'credentials-example.sh' to 'credentials.sh' and fill in OAuth keys
+- Run:
     - `vagrant up`
     - `vagrant ssh`
     - `cd /vagrant`
