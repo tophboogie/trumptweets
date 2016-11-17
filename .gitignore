@@ -2,3 +2,4 @@
 .vagrant
 node_modules
 npm-debug.log
+ubuntu-xenial-16.04-cloudimg-console.log

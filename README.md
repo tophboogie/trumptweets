@@ -11,3 +11,5 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
     - `cd /vagrant`
 - Install nodejs dependencies:
     - `npm install`
+- Start MongoDB:
+    - `sudo service mongod start`
