@@ -17,7 +17,7 @@ var ToneAnalyzer = new ToneAnalyzerV3({
   version_date: '2016-05-19'
 })
 
-var TwitterSync = () => {
+function TwitterSync() {
   return new Promise((resolve, reject) => {
     Twitter.get('statuses/user_timeline', {
         user_id: user_id,
@@ -34,18 +34,18 @@ var TwitterSync = () => {
   })
 }
 
-var WatsonSync = (data) => {
+function WatsonSync(data) {
   return new Promise((resolve, reject) => {
     ToneAnalyzer.tone({text: data.text}, (err, data, resp) => {
       if (err)
-        reject(error)
+        reject(err)
       else
         resolve(processTone(data))
     })
   })
 }
 
-var WatsonBulk = (data) => {
+function WatsonBulk(data) {
   var promises = []
   data.forEach((element, i) => {
     promises.push(WatsonSync(element))
@@ -68,11 +68,19 @@ function processTone(data) {
   return JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
 }
 
-TwitterSync()
-  .then(WatsonBulk)
-  .then(function(data) {
-    new_tweets.forEach((element, i) => {
-      element.tone = data[i]
-    })
-    console.log(JSON.stringify(new_tweets))
+module.exports = () => {
+  return new Promise((resolve, reject) => {
+    TwitterSync()
+      .then(WatsonBulk)
+      .then((data) => {
+        new_tweets.forEach((element, i) => {
+          element.tone = data[i]
+        })
+      })
+      .done(() => {
+        resolve(new_tweets)
+      }, () => {
+        reject('There was an error')
+      })
   })
+}
