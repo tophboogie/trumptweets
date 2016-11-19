@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
 var cors = require('cors')
+var bodyParser = require('body-parser')
 var Tweet = require('./tweetModel.js')
 var mongoose = require('mongoose')
 
@@ -10,7 +11,8 @@ var port = 3030
 
 var router = express.Router()
 
-app.use(cors());
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(cors())
 
 router.route('/').get(function(req, res) {
   Tweet.find((err, tweets) => {
@@ -19,6 +21,11 @@ router.route('/').get(function(req, res) {
     else
       res.json(tweets)
   })
+})
+
+router.route('/tonify').post(function(req, res) {
+  console.log(req.body.id)
+  res.send('tone tone tone')
 })
 
 app.use('/api', router)
