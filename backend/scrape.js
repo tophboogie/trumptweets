@@ -25,10 +25,8 @@ function TwitterSync() {
         exclude_replies: true,
         include_rts: false
       }, (err, data, resp) => {
-        if (err) {
-          console.log('Problem with Twitter')
+        if (err)
           reject(err)
-        }
         else
           resolve(processTweets(data))
       }
@@ -39,10 +37,8 @@ function TwitterSync() {
 function WatsonSync(data) {
   return new Promise((resolve, reject) => {
     ToneAnalyzer.tone({text: data.text}, (err, data, resp) => {
-      if (err) {
-        console.log('Problem with Watson')
+      if (err)
         reject(err)
-      }
       else
         resolve(processTone(data))
     })
