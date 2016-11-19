@@ -12,6 +12,7 @@ var port = 3030
 var router = express.Router()
 
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 app.use(cors())
 
 router.route('/').get(function(req, res) {
