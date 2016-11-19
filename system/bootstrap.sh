@@ -13,8 +13,8 @@ apt-get install -y mongodb-org
 # npm-check-updates auto-updater
 npm install -g npm-check-updates
 
-# nodejs pm2 module
-# npm install -g pm2
+# nodejs pm2 server module
+npm install -g pm2
 
 # set up environment variables
 cp /vagrant/system/credentials.sh /etc/profile.d/credentials.sh

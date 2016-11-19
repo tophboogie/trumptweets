@@ -1,13 +1,16 @@
 var express = require('express')
 var app = express()
+var cors = require('cors')
 var Tweet = require('./tweetModel.js')
 var mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost/tweets')
 
-var port = process.env.PORT || 3000
+var port = 3030
 
 var router = express.Router()
+
+app.use(cors());
 
 router.route('/').get(function(req, res) {
   Tweet.find((err, tweets) => {
@@ -21,4 +24,4 @@ router.route('/').get(function(req, res) {
 app.use('/api', router)
 
 app.listen(port)
-console.log('Magic happens on port ' + port)
+console.log('API live on port: ' + port)
