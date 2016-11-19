@@ -1,14 +1,18 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 var autoprefixer = require('autoprefixer')
+var path = require('path')
 module.exports = {
-  entry: "./frontend/dev/jsx/app.jsx",
+  entry: path.join(__dirname, "/frontend/dev/jsx/app.jsx"),
   output: {
-    path: __dirname + "/frontend/prod",
+    path: path.join(__dirname, "/frontend/prod"),
     filename: "bundle.js"
   },
   devtool: "source-map",
   module: {
+    resolveLoader: {
+      root: path.join(__dirname, 'node_modules')
+    },
     loaders: [
       {
         test: /\.(jsx|js)$/,
