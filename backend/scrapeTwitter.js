@@ -1,7 +1,6 @@
 var user_id = '25073877' // Trump user id
 
 var Twit = require('twit')
-var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3')
 var Promise = require('promise')
 var JsonQuery = require('json-query')
 
@@ -9,12 +8,6 @@ var Twitter = new Twit({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
   app_only_auth: true
-})
-
-var ToneAnalyzer = new ToneAnalyzerV3({
-  username: process.env.WATSON_USERNAME,
-  password: process.env.WATSON_PASSWORD,
-  version_date: '2016-05-19'
 })
 
 function TwitterSync() {
@@ -34,25 +27,6 @@ function TwitterSync() {
   })
 }
 
-function WatsonSync(data) {
-  return new Promise((resolve, reject) => {
-    ToneAnalyzer.tone({text: data.text}, (err, data, resp) => {
-      if (err)
-        reject(err)
-      else
-        resolve(processTone(data))
-    })
-  })
-}
-
-function WatsonBulk(data) {
-  var promises = []
-  data.forEach((element, i) => {
-    promises.push(WatsonSync(element))
-  })
-  return Promise.all(promises)
-}
-
 function processTweets(data) {
   new_tweets = []
   data.forEach((element, i) => {
@@ -64,23 +38,14 @@ function processTweets(data) {
   return new_tweets
 }
 
-function processTone(data) {
-  return JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
-}
-
 module.exports = () => {
   return new Promise((resolve, reject) => {
     TwitterSync()
-      .then(WatsonBulk)
-      .then((data) => {
-        new_tweets.forEach((element, i) => {
-          element.tone = data[i]
-        })
-      })
-      .done(() => {
+      .done((new_tweets) => {
+        //console.log(new_tweets)
         resolve(new_tweets)
       }, () => {
-        reject('There was an error')
+        reject('There was an error with Twitter')
       })
   })
 }
