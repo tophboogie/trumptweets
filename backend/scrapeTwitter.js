@@ -42,9 +42,10 @@ module.exports = () => {
   return new Promise((resolve, reject) => {
     TwitterSync()
       .done((new_tweets) => {
+        //console.log(new_tweets)
         resolve(new_tweets)
       }, () => {
-        reject('There was an error')
+        reject('There was an error with Twitter')
       })
   })
 }

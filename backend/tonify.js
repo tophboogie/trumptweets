@@ -10,41 +10,36 @@ var ToneAnalyzer = new Watson.tone_analyzer({
 })
 
 function WatsonSync(data) {
+  var promises = []
+  data.forEach((element, i) => {
+    promises.push(WatsonSyncSingle(element))
+  })
+  return Promise.all(promises)
+}
+
+function WatsonSyncSingle(data) {
   return new Promise((resolve, reject) => {
     ToneAnalyzer.tone({text: data.text}, (err, tone) => {
       if (err)
         reject(err)
       else
-        resolve(JSON.stringify(tone, null, 2))
+        resolve(processTone(tone))
     })
   })
 }
 
-function WatsonBulk(data) {
-  var promises = []
-  data.forEach((element, i) => {
-    promises.push(WatsonSync(element))
-  })
-  return Promise.all(promises)
-}
-
 function processTone(data) {
-  return JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
+  var emotion = JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
+  return emotion
 }
 
-module.exports = () => {
+module.exports = (data) => {
   return new Promise((resolve, reject) => {
-    TwitterSync()
-      // .then((data) => WatsonBulk(data))
-      // .then((data) => {
-      //   new_tweets.forEach((element, i) => {
-      //     element.tone = data[i]
-      //   })
-      // })
-      .done((new_tweets) => {
-        resolve(new_tweets)
+    WatsonSync(data)
+      .done((new_tones) => {
+        resolve(new_tones)
       }, () => {
-        reject('There was an error')
+        reject('There was an error with Watson')
       })
   })
 }
