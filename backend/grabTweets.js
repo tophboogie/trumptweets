@@ -9,6 +9,7 @@ console.log(mongoose.connection.readyState)
 ScrapeTwitter()
   .then(Tonify)
   .then((data) => {
+    console.log(data)
     new_tweets.forEach((element, i) => {
       element.tone = data[i]
     })

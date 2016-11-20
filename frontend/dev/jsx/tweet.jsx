@@ -19,7 +19,31 @@ class Tweet extends Component {
         </div>
         <div className="panel-body">
           <p>{tweet.text}</p>
-          {tweet.tone.map((emotion, i) => {
+          <hr />
+          <h4>Emotional Data:</h4>
+          {tweet.tone.emotion.map((emotion, i) => {
+            return (
+              <Emotion
+                key={i}
+                title={emotion.tone_name}
+                score={emotion.score}
+                colorClass={colors[i]}
+              />
+            )
+          })}
+          <h4>Language Data:</h4>
+          {tweet.tone.language.map((emotion, i) => {
+            return (
+              <Emotion
+                key={i}
+                title={emotion.tone_name}
+                score={emotion.score}
+                colorClass={colors[i]}
+              />
+            )
+          })}
+          <h4>Social Data:</h4>
+          {tweet.tone.social.map((emotion, i) => {
             return (
               <Emotion
                 key={i}
