@@ -1,21 +1,58 @@
 import React, {Component, PropTypes} from 'react'
 
+import Emotion from './emotion.jsx'
+
 class Tweet extends Component {
   render() {
-    const {tweet, getTone, loading} = this.props
-    if (tweet.tone) { console.log(tweet.tone)}
+    const tweet = this.props.tweet
+    const colors = [
+      'progress-bar-danger',
+      'progress-bar-warning',
+      'progress-bar-info',
+      'progress-bar-success',
+      'progress-bar-primary'
+    ]
     return (
-      <div style={{fontSize: '16px', marginBottom: '15px'}}>
-        <div>{tweet.text}</div>
-        <div>
-          {tweet.tone
-            ? <span>{tweet.tone}</span>
-            : <button disabled={loading} onClick={() => getTone(tweet)}>get tone</button>
-          }
-          {loading
-            ? <span>loading...</span>
-            : null
-          }
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <h2 className="panel-title">Tweeted on: {tweet.date}</h2>
+        </div>
+        <div className="panel-body">
+          <p>{tweet.text}</p>
+          <hr />
+          <h4>Emotional Data:</h4>
+          {tweet.tone.emotion.map((emotion, i) => {
+            return (
+              <Emotion
+                key={i}
+                title={emotion.tone_name}
+                score={emotion.score}
+                colorClass={colors[i]}
+              />
+            )
+          })}
+          <h4>Language Data:</h4>
+          {tweet.tone.language.map((emotion, i) => {
+            return (
+              <Emotion
+                key={i}
+                title={emotion.tone_name}
+                score={emotion.score}
+                colorClass={colors[i]}
+              />
+            )
+          })}
+          <h4>Social Data:</h4>
+          {tweet.tone.social.map((emotion, i) => {
+            return (
+              <Emotion
+                key={i}
+                title={emotion.tone_name}
+                score={emotion.score}
+                colorClass={colors[i]}
+              />
+            )
+          })}
         </div>
       </div>
     )
@@ -23,9 +60,7 @@ class Tweet extends Component {
 }
 
 Tweet.propTypes = {
-  tweet: PropTypes.object.isRequired,
-  getTone: PropTypes.func,
-  loading: PropTypes.bool
+  tweet: PropTypes.object.isRequired
 }
 
 export default Tweet

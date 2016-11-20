@@ -1,4 +1,5 @@
-body {
-  color: white;
-  background-color: black;
+@import 'bootstrap';
+
+.gutter-top {
+  margin-top: $grid-gutter-width;
 }
