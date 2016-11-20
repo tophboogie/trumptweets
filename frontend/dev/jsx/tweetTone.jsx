@@ -3,7 +3,6 @@ import React, {Component, PropTypes} from 'react'
 class TweetTone extends Component {
   render() {
     const {tone} = this.props
-
     return (
       <div style={{fontSize: '16px', marginBottom: '15px'}}>
         {

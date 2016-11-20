@@ -9,13 +9,14 @@ import '../scss/containers.scss'
 
 //stores
 import tweetStore from '../stores/tweetStore'
+import speechStore from '../stores/speechStore'
 
 // components
 import Container from './container.jsx'
 import Home from './home.jsx'
 
 ReactDOM.render((
-  <Provider tweetStore={tweetStore}>
+  <Provider tweetStore={tweetStore} speechStore={speechStore}>
     <Router history={hashHistory}>
       <Route path="/" component={Container}>
         <IndexRoute component={Home} />

@@ -3,7 +3,8 @@ import {inject, observer} from 'mobx-react'
 
 class WordCloud extends Component {
   render() {
-    const {selectedText} = this.props.tweetStore
+    const {selectedTweetText} = this.props.tweetStore
+    const {selectedSpeechText} = this.props.speechStore
     return (
       <div className='word-cloud'>
 
@@ -13,9 +14,10 @@ class WordCloud extends Component {
 }
 
 WordCloud.propTypes = {
-  tweetStore: PropTypes.object.isRequired
+  tweetStore: PropTypes.object.isRequired,
+  speechStore: PropTypes.object.isRequired
 }
 
-const WordCloudWrapped = inject('tweetStore')(observer(WordCloud))
+const WordCloudWrapped = inject('tweetStore', 'speechStore')(observer(WordCloud))
 
 export default WordCloudWrapped

@@ -27,11 +27,11 @@ router.route('/').get(function(req, res) {
 
 router.route('/tonify').post(function(req, res) {
   Tweet.findById(req.body.id, (err, tweet) => {
-    if (err)
+    if (err) {
       res.send(err)
-    else if (tweet.tone)
+    } else if (tweet.tone && tweet.tone.emotions && tweet.tone.emotions.length) {
       res.send(tweet)
-    else
+    } else {
       Tonify([tweet]).done((data) => {
         tweet.tone = data[0]
         tweet.save((err) => {
@@ -41,6 +41,7 @@ router.route('/tonify').post(function(req, res) {
             res.send(tweet)
         })
       })
+    }
   })
 })
 

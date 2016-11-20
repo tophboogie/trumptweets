@@ -9,9 +9,9 @@ class Tweet extends Component {
       <div style={{fontSize: '16px', marginBottom: '15px'}}>
         <div>{tweet.text}</div>
         <div>
-          {tweet.tone
+          {tweet.tone && tweet.tone.emotions
             ? <TweetTone tone={tweet.tone} />
-            : <button disabled={loading} onClick={() => getTone(tweet)}>get tone</button>
+            : <button disabled={loading} onClick={() => getTone(tweet._id)}>get tone</button>
           }
           {loading
             ? <span>loading...</span>

@@ -6,9 +6,9 @@ import WordCloud from './wordCloud.jsx'
 
 class Home extends Component {
   componentDidMount() {
-    const {hasBeenFetched, getTweets} = this.props.tweetStore
+    const {hasBeenFetched, requestTweets} = this.props.tweetStore
     if (!hasBeenFetched) {
-      getTweets()
+      requestTweets()
     }
   }
   render() {

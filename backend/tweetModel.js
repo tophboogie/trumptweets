@@ -4,6 +4,7 @@ var TweetSchema = new Mongoose.Schema({
   text: String,
   date: Date,
   tone: Object,
+  raw: Object,
   scrapeDate: { type: Date, default: Date.now }
 });
 

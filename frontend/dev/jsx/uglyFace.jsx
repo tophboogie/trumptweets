@@ -12,7 +12,7 @@ class UglyFace extends Component {
 }
 
 UglyFace.propTypes = {
-  emotion: PropTypes.object.isRequired
+  emotion: PropTypes.object
 }
 
 export default UglyFace
