@@ -10,11 +10,12 @@ const tweetStore = observable({
     tweetStore.allTweets.replace(tweets)
     tweetStore.hasBeenFetched = true
   }),
-  getToneSuccess: action((id, tone) => {
+  getToneSuccess: action((id, data) => {
+    console.log(data)
     tweetStore.loadingTweets.delete(id)
     const tweet = tweetStore.allTweets.find((tweet) => tweet._id === id)
     const index = tweetStore.allTweets.indexOf(tweet)
-    tweetStore.allTweets[index].tone = tone
+    tweetStore.allTweets[index] = data
   })
 })
 

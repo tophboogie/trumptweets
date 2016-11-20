@@ -4,6 +4,7 @@ var cors = require('cors')
 var bodyParser = require('body-parser')
 var Tweet = require('./tweetModel.js')
 var mongoose = require('mongoose')
+var Tonify = require('./tonify.js')
 
 mongoose.connect('mongodb://localhost/tweets')
 
@@ -25,8 +26,22 @@ router.route('/').get(function(req, res) {
 })
 
 router.route('/tonify').post(function(req, res) {
-  console.log(req.body.id)
-  res.send('tone tone tone')
+  Tweet.findById(req.body.id, (err, tweet) => {
+    if (err)
+      res.send(err)
+    else if (tweet.tone)
+      res.send(tweet)
+    else
+      Tonify([tweet]).done((data) => {
+        tweet.tone = data[0]
+        tweet.save((err) => {
+          if (err)
+            res.send(err)
+          else
+            res.send(tweet)
+        })
+      })
+  })
 })
 
 app.use('/api', router)
