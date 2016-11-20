@@ -1,34 +1,27 @@
-import React from 'react'
-import Axios from 'axios'
+import React, {Component, PropTypes} from 'react'
+import {inject, observer} from 'mobx-react'
+import TweetList from './tweetList.jsx'
 
-export default class Home extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      tweets: []
+class Home extends Component {
+  componentDidMount() {
+    const {hasBeenFetched, getTweets} = this.props.tweetStore
+    if (!hasBeenFetched) {
+      getTweets()
     }
   }
-  componentDidMount() {
-    Axios.get('http://localhost:3030/api')
-      .then((resp) => {
-        this.setState({
-          tweets: resp.data
-        })
-      })
-  }
   render() {
-    var tweets = this.state.tweets
-    var key = 0
-    console.log(tweets)
     return (
       <div>
-        {tweets.map((tweet) => {
-          key++
-          return (
-            <p key={key}>{tweet.text}</p>
-          )
-        })}
+        <TweetList />
       </div>
     )
   }
 }
+
+Home.propTypes = {
+  tweetStore: PropTypes.object.isRequired
+}
+
+const HomeWrapped = inject('tweetStore')(observer(Home))
+
+export default HomeWrapped
