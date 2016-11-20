@@ -1,0 +1,24 @@
+@import './_variables.scss';
+
+.home {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ugly-face {
+  background-color: $amaranth;
+  flex: 1;
+  padding: $container-padding;
+}
+
+.word-cloud {
+  background-color: $black;
+  color: $white;
+  flex: 1;
+  padding: $container-padding;
+}
+
+.tweet-list {
+  flex: 1;
+  padding: $container-padding;
+}

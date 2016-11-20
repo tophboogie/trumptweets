@@ -1,16 +1,17 @@
 import React, {Component, PropTypes} from 'react'
+import {toJS} from 'mobx'
+import TweetTone from './tweetTone.jsx'
 
 class Tweet extends Component {
   render() {
     const {tweet, getTone, loading} = this.props
-    if (tweet.tone) { console.log(tweet.tone)}
     return (
       <div style={{fontSize: '16px', marginBottom: '15px'}}>
         <div>{tweet.text}</div>
         <div>
-          {tweet.tone
-            ? <span>{tweet.tone}</span>
-            : <button disabled={loading} onClick={() => getTone(tweet)}>get tone</button>
+          {tweet.tone && tweet.tone.emotions
+            ? <TweetTone tone={tweet.tone} />
+            : <button disabled={loading} onClick={() => getTone(tweet._id)}>get tone</button>
           }
           {loading
             ? <span>loading...</span>

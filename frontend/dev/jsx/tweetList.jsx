@@ -1,20 +1,22 @@
 import React, {Component, PropTypes} from 'react'
 import {inject, observer} from 'mobx-react'
+import {toJS} from 'mobx'
 
 import Tweet from './tweet.jsx'
 
 class TweetList extends Component {
   render() {
-    const {allTweets, getTone, loadingTweets} = this.props.tweetStore
+    const {allTweets, requestTone, loadingTweet} = this.props.tweetStore
+
     return (
-      <div>
+      <div className='tweet-list'>
         {allTweets.map((tweet) => {
           return (
             <Tweet
               key={tweet._id}
               tweet={tweet}
-              getTone={getTone}
-              loading={loadingTweets.get(tweet._id)}
+              getTone={requestTone}
+              loading={loadingTweet.get(tweet._id)}
             />
           )
         })}

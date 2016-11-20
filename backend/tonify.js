@@ -29,8 +29,8 @@ function WatsonSyncSingle(data) {
 }
 
 function processTone(data) {
-  var emotion = JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
-  return emotion
+  var emotions = JsonQuery('tone_categories[category_id=emotion_tone].tones', {data: data.document_tone}).value
+  return {emotions, raw: data}
 }
 
 module.exports = (data) => {

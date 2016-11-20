@@ -4,17 +4,26 @@ import {get, post} from 'axios'
 
 const tweetStore = observable({
   allTweets: [],
-  loadingTweets: asMap(),
+  loadingTweets: false,
+  loadingTweet: asMap(),
   hasBeenFetched: false,
+  requestTweets: action (() => {
+    tweetStore.loadingTweets = true
+    tweetStore.getTweets()
+  }),
   getTweetsSuccess: action((tweets) => {
     tweetStore.allTweets.replace(tweets)
     tweetStore.hasBeenFetched = true
   }),
-  getToneSuccess: action((id, tone) => {
-    tweetStore.loadingTweets.delete(id)
-    const tweet = tweetStore.allTweets.find((tweet) => tweet._id === id)
+  requestTone: action((id) => {
+    tweetStore.loadingTweet.set(id, true) // sets a flag for this tweet id
+    tweetStore.getTone(id)
+  }),
+  getToneSuccess: action((id, data) => {
+    tweetStore.loadingTweet.delete(id)
+    const tweet = tweetStore.allTweets.find((t) => t._id === id)
     const index = tweetStore.allTweets.indexOf(tweet)
-    tweetStore.allTweets[index].tone = tone
+    tweetStore.allTweets[index] = data
   })
 })
 
@@ -25,11 +34,10 @@ tweetStore.getTweets = () => {
       tweetStore.getTweetsSuccess(resp.data)
     })
 }
-tweetStore.getTone = (tweet) => {
-  tweetStore.loadingTweets.set(tweet._id, true) // sets a flag for this tweet id
-  post('http://localhost:3030/api/tonify', {id: tweet._id})
+tweetStore.getTone = (id) => {
+  post('http://localhost:3030/api/tonify', {id})
     .then((resp) => {
-      tweetStore.getToneSuccess(tweet._id, resp.data)
+      tweetStore.getToneSuccess(id, resp.data)
     })
 }
 

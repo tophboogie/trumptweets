@@ -33,6 +33,7 @@ function processTweets(data) {
     new_tweets[i] = {
       text: element.text,
       created_at: element.created_at,
+      raw: element
     }
   })
   return new_tweets
