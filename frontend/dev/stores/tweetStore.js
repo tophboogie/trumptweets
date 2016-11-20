@@ -11,7 +11,6 @@ const tweetStore = observable({
     tweetStore.hasBeenFetched = true
   }),
   getToneSuccess: action((id, data) => {
-    console.log(data)
     tweetStore.loadingTweets.delete(id)
     const tweet = tweetStore.allTweets.find((tweet) => tweet._id === id)
     const index = tweetStore.allTweets.indexOf(tweet)

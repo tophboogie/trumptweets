@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react'
 import {inject, observer} from 'mobx-react'
 import TweetList from './tweetList.jsx'
+import UglyFace from './uglyFace.jsx'
+import WordCloud from './wordCloud.jsx'
 
 class Home extends Component {
   componentDidMount() {
@@ -11,7 +13,9 @@ class Home extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='home'>
+        <UglyFace />
+        <WordCloud />
         <TweetList />
       </div>
     )

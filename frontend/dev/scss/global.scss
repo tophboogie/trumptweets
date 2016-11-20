@@ -1,4 +1,12 @@
+@import './_variables.scss';
+
+html {
+  font-size: $html-font-size;
+}
+
 body {
-  color: white;
-  background-color: black;
+  background-color: $white-smoke;
+  color: $mattherhorn;
+  font-size: $body-font-size;
+  margin: 0;
 }

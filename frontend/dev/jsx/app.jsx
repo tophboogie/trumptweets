@@ -5,6 +5,7 @@ import {Provider} from 'mobx-react'
 
 // styles
 import '../scss/global.scss'
+import '../scss/containers.scss'
 
 //stores
 import tweetStore from '../stores/tweetStore'

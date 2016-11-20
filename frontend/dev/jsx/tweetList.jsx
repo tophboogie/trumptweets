@@ -7,7 +7,7 @@ class TweetList extends Component {
   render() {
     const {allTweets, getTone, loadingTweets} = this.props.tweetStore
     return (
-      <div>
+      <div className='tweet-list'>
         {allTweets.map((tweet) => {
           return (
             <Tweet
