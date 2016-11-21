@@ -19,3 +19,5 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
 - Webpack Server
     - `npm start`
     - connect at `http://localhost:3000/webpack-dev-server/`
+- Compile
+    - `npm run build`
