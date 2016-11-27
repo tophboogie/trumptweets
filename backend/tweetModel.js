@@ -1,9 +1,10 @@
 var Mongoose = require('mongoose')
 
 var TweetSchema = new Mongoose.Schema({
-  text: String,
-  date: Date,
-  tone: Object,
+  tweetObj: Object,
+  tweetText: String,
+  tweetDate: Date,
+  tweetId: String,
   scrapeDate: { type: Date, default: Date.now }
 });
 

@@ -20,4 +20,4 @@ npm install -g pm2
 cp /vagrant/system/credentials.sh /etc/profile.d/credentials.sh
 
 # remove unneeded packages
-# apt-get autoremove
+apt-get autoremove -y
