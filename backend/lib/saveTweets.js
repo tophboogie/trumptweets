@@ -6,8 +6,8 @@ var Promise = require('promise')
 
 Mongoose.connect('mongodb://localhost/tweets')
 Mongoose.Promise = require('promise')
-//console.log(mongoose.connection.readyState)
 
+// save all tweets return promise
 function saveToDB(data) {
   var tweetsToAdd = []
   data.forEach((element, i) => {
@@ -30,34 +30,75 @@ function saveToDB(data) {
 }
 
 var getOlderTweets = () => {
-  Tweet.getID('tweetId', (err, data) => {
-    if (err) return err
-    var max_id = false
-    if (data)
-      max_id = BigInt(data.tweetId).add(-1).toString()
-    GetTweets(max_id, false, 200).then((data) => {
-      saveToDB(data).then((data) => {
-        getOlderTweets()
+  return new Promise((resolve, reject) => {
+
+    recurse()
+    function recurse() {
+
+      // get oldest tweet ID
+      Tweet.getID('tweetId', (err, data) => {
+        if (err) return err
+        var max_id = false
+
+        // need library for subtraction (no 64bit in native JS)
+        // subtract 1 as per Twitter docs
+        if (data)
+          max_id = BigInt(data.tweetId).add(-1).toString()
+
+        // get tweets
+        GetTweets(max_id, false, 200).then((data) => {
+          // if there are tweets, save
+          if (data.length > 0) {
+            saveToDB(data).done(() => {
+              console.log('Saved', data.length, ' Tweets...')
+              recurse()
+            })
+          }
+          // if no tweets left, leave
+          else {
+            resolve()
+          }
+        // on connection error, try again
+        }, () => {
+          recurse()
+        })
       })
-      .done(() => {
-        console.log('Retrieved Tweets.')
-        process.exit()
-      })
-    }, () => {
-      getOlderTweets()
-    })
+    }
   })
 }
 
 var getNewerTweets = () => {
-  Tweet.getID('-tweetId', (err, data) => {
-    if (err) return err
-    var since_id = false
-    if (data)
-      since_id = data.tweetId
-    GetTweets(false, since_id).then((data) => {
-      saveToDB(data)
-    })
+  return new Promise((resolve, reject) => {
+    recurse()
+    function recurse() {
+
+      // get newest tweet ID
+      Tweet.getID('-tweetId', (err, data) => {
+        if (err) return err
+        var since_id = false
+        if (data)
+          since_id = data.tweetId
+
+        // get tweets
+        GetTweets(false, since_id).then((data) => {
+
+          // if there are tweets, save
+          if (data.length > 0) {
+            saveToDB(data).done(() => {
+              console.log('Saved', data.length, ' Tweets...')
+              resolve()
+            })
+          }
+          // if no tweets left, leave
+          else {
+            resolve()
+          }
+        // if connection error, try again
+        }, () => {
+          recurse()
+        })
+      })
+    }
   })
 }
 

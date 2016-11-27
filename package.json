@@ -49,6 +49,7 @@
     "express": "^4.14.0",
     "json-query": "^2.2.0",
     "mongoose": "^4.6.8",
+    "node-schedule": "^1.2.0",
     "promise": "^7.1.1",
     "twit": "^2.2.5",
     "watson-developer-cloud": "^2.9.0"
