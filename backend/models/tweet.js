@@ -1,4 +1,5 @@
 var Mongoose = require('mongoose')
+Mongoose.Promise = require('promise')
 
 var TweetSchema = new Mongoose.Schema({
   tweetObj: Object,
@@ -8,6 +9,8 @@ var TweetSchema = new Mongoose.Schema({
   scrapeDate: { type: Date, default: Date.now }
 });
 
-var Tweet = Mongoose.model('Tweet', TweetSchema);
+TweetSchema.statics.getID = function(query, cb) {
+  return this.findOne({}, cb).sort(query)
+}
 
-module.exports = Tweet
+module.exports = Mongoose.model('Tweet', TweetSchema)

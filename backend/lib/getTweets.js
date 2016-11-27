@@ -23,11 +23,12 @@ module.exports = (max_id = false, since_id = false, count = 5) => {
     options.since_id = since_id
   return new Promise((resolve, reject) => {
     Twitter.get('statuses/user_timeline', options, (err, data, resp) => {
-        if (err)
-          reject('There was an error with Twitter')
-        else
-          resolve(data)
+      if (err) {
+        console.log('There was an error connecting with Twitter...')
+        reject(err)
       }
-    )
+      else
+        resolve(data)
+    })
   })
 }
