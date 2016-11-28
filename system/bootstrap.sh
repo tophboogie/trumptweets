@@ -19,5 +19,9 @@ npm install -g pm2
 # set up environment variables
 cp /vagrant/system/credentials.sh /etc/profile.d/credentials.sh
 
+# disable THP for mongoDB
+cp /vagrant/system/disable-thp /etc/init.d/disable-thp
+update-rc.d disable-thp defaults
+
 # remove unneeded packages
 apt-get autoremove -y
