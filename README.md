@@ -12,12 +12,14 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
     - `cd /vagrant`
 - Install nodejs dependencies:
     - `npm install`
-- Grab some tweets (for initializing the tweets db)
-    - `node backend/grabTweets.js`
+- Grab all available tweets (for initializing the tweets db)
+    - `node backend/populateDB.js`
+- Start new tweet scraper
+    - `pm2 start backend/getNewTweets.js`
 - Start API
     - `pm2 start backend/api.js`
-- Webpack Server
+- Webpack server
     - `npm start`
     - connect at `http://localhost:3000/webpack-dev-server/`
-- Compile
+- Compile front end
     - `npm run build`

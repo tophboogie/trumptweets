@@ -1,6 +1,7 @@
 .DS_Store
 .vagrant
 node_modules
+dump
 npm-debug.log
 ubuntu-xenial-16.04-cloudimg-console.log
 credentials.sh
