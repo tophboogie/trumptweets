@@ -9,7 +9,7 @@ var Twitter = new Twit({
   app_only_auth: true
 })
 
-module.exports = (max_id = false, since_id = false, count = 5) => {
+module.exports = (max_id = false, since_id = false, count = 200) => {
   var options = {
     user_id: user_id,
     trim_user: true,

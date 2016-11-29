@@ -1,7 +1,7 @@
 var GetTweets = require('./getTweets.js')
 var Tweet = require('../models/tweet.js')
 var Mongoose = require('mongoose')
-var BigInt = require("big-integer")
+var BigInt = require('big-integer')
 var Promise = require('promise')
 
 Mongoose.connect('mongodb://localhost/tweets')
@@ -46,7 +46,7 @@ var getOlderTweets = () => {
           max_id = BigInt(data.tweetId).add(-1).toString()
 
         // get tweets
-        GetTweets(max_id, false, 200).then((data) => {
+        GetTweets(max_id, false).then((data) => {
           // if there are tweets, save
           if (data.length > 0) {
             saveToDB(data).done(() => {
