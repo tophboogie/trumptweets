@@ -11,15 +11,17 @@ var port = 3030
 
 var router = express.Router()
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
-app.use(cors())
+// app.use(bodyParser.urlencoded({extended: true}))
+// app.use(bodyParser.json())
+// app.use(cors())
 
-router.route('/').get(function(req, res) {
+router.route('/tweets/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(function(req, res) {
+  var fromDate = new Date(req.params.fromYr, Number(req.params.fromMo) - 1, req.params.fromDay)
+  var toDate = new Date(req.params.toYr, Number(req.params.toMo) - 1, Number(req.params.toDay) + 1)
   Tweet.find({
     tweetDate: {
-      $gte: new Date(2016, 5, 1),
-      $lt: new Date(2016, 5, 10)
+      $gt: fromDate,
+      $lt: toDate
     }})
     .sort('tweetDate')
     .select('tweetDate tweetText')
@@ -27,12 +29,12 @@ router.route('/').get(function(req, res) {
       if (err)
         res.send(err)
       else {
-        res.json(tweets)
+        res.jsonp(tweets)
       }
     })
 })
 
-app.use('/api', router)
+app.use('/', router)
 
 app.listen(port)
 console.log('API live on port: ' + port)
