@@ -15,6 +15,24 @@ var router = express.Router()
 // app.use(bodyParser.json())
 // app.use(cors())
 
+router.route('/tweets').get(function(req, res) {
+  var today = new Date()
+  var monthAgo = new Date().setDate(today.getDate()-30)
+  Tweet.find({
+    tweetDate: {
+      $gte: new Date(monthAgo)
+    }})
+    .sort('tweetDate')
+    .select('tweetDate tweetText')
+    .exec(function (err, tweets) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(tweets)
+      }
+    })
+})
+
 router.route('/tweets/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(function(req, res) {
   var fromDate = new Date(req.params.fromYr, Number(req.params.fromMo) - 1, req.params.fromDay)
   var toDate = new Date(req.params.toYr, Number(req.params.toMo) - 1, Number(req.params.toDay) + 1)
