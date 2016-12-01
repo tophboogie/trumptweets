@@ -46,11 +46,14 @@
     "big-integer": "^1.6.17",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
+    "d3": "^4.4.0",
+    "d3-cloud": "^1.2.1",
     "express": "^4.14.0",
     "json-query": "^2.2.0",
     "mongoose": "^4.7.0",
     "node-schedule": "^1.2.0",
     "promise": "^7.1.1",
+    "react-faux-dom": "^3.0.0",
     "twit": "^2.2.5",
     "watson-developer-cloud": "^2.9.1"
   }
