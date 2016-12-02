@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --content-base ./frontend/dev/ --port 3000 --host 0.0.0.0",
-    "build": "webpack --display-error-details --progress"
+    "build": "webpack --display-error-details --progress",
+    "startApi": "pm2 start backend/api.js --log-date-format 'MM-DD-YYYY HH:mm:ss.SSS'",
+    "startScraper": "pm2 start backend/getNewTweets.js --log-date-format 'MM-DD-YYYY HH:mm:ss.SSS'"
   },
   "repository": {
     "type": "git",

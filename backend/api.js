@@ -13,7 +13,7 @@ var router = express.Router()
 
 // app.use(bodyParser.urlencoded({extended: true}))
 // app.use(bodyParser.json())
-// app.use(cors())
+app.use(cors())
 
 router.route('/tweets').get(function(req, res) {
   var today = new Date()
