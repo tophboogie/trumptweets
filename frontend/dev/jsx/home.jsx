@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 
-import Tweet from './tweet.jsx'
+import Wordcloud from './wordcloud.jsx'
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Home extends React.Component {
     }
   }
   componentDidMount() {
-    Axios.get('http://localhost:3030/api')
+    Axios.get('http://localhost:3030/tweets')
       .then((resp) => {
         this.setState({
           tweets: resp.data
@@ -19,16 +19,10 @@ export default class Home extends React.Component {
       })
   }
   render() {
+    //console.log(this.state.tweets)
     return (
       <div className="container gutter-top">
-        {this.state.tweets.map((tweet, i) => {
-          return (
-              <Tweet
-                key={i}
-                tweet={tweet}
-              />
-          )
-        })}
+        <Wordcloud tweets={this.state.tweets} />
       </div>
     )
   }

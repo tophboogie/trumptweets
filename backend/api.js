@@ -2,7 +2,7 @@ var express = require('express')
 var app = express()
 var cors = require('cors')
 var bodyParser = require('body-parser')
-var Tweet = require('./tweetModel.js')
+var Tweet = require('./models/tweet.js')
 var mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost/tweets')
@@ -11,25 +11,48 @@ var port = 3030
 
 var router = express.Router()
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({extended: true}))
+// app.use(bodyParser.json())
 app.use(cors())
 
-router.route('/').get(function(req, res) {
-  Tweet.find((err, tweets) => {
-    if (err)
-      res.send(err)
-    else
-      res.json(tweets)
-  })
+router.route('/tweets').get(function(req, res) {
+  var today = new Date()
+  var monthAgo = new Date().setDate(today.getDate()-30)
+  Tweet.find({
+    tweetDate: {
+      $gte: new Date(monthAgo)
+    }})
+    .sort('tweetDate')
+    .select('tweetDate tweetText')
+    .exec(function (err, tweets) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(tweets)
+      }
+    })
 })
 
-router.route('/tonify').post(function(req, res) {
-  console.log(req.body.id)
-  res.send('tone tone tone')
+router.route('/tweets/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(function(req, res) {
+  var fromDate = new Date(req.params.fromYr, Number(req.params.fromMo) - 1, req.params.fromDay)
+  var toDate = new Date(req.params.toYr, Number(req.params.toMo) - 1, Number(req.params.toDay) + 1)
+  Tweet.find({
+    tweetDate: {
+      $gt: fromDate,
+      $lt: toDate
+    }})
+    .sort('tweetDate')
+    .select('tweetDate tweetText')
+    .exec(function (err, tweets) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(tweets)
+      }
+    })
 })
 
-app.use('/api', router)
+app.use('/', router)
 
 app.listen(port)
 console.log('API live on port: ' + port)
