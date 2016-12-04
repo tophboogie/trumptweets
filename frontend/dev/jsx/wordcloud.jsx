@@ -1,5 +1,5 @@
 import React from 'react'
-import createWordcloud from './d3/wordcloud.js'
+import createWordcloud from '../lib/d3/wordcloud.js'
 import rd3 from 'react-d3-library'
 const RD3Component = rd3.Component
 

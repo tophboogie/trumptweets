@@ -15,6 +15,11 @@ function removeStopWords(string) {
     var regex;
     var cleansed_string = string
     var stop_words = new Array(
+      //custom
+        'am',
+        'pm',
+        'amp',
+      //default
         'a',
         'about',
         'above',
@@ -242,7 +247,6 @@ function removeStopWords(string) {
         'needing',
         'needs',
         'never',
-        'new',
         'new',
         'newer',
         'newest',

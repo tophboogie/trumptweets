@@ -6,7 +6,7 @@ const createWordcloud = data => {
   var node = document.createElement('div')
   var fill = d3.scale.category20();
 
-  var size = [500, 500]
+  var size = [1000, 1000]
 
   var nodeDom = d3.select(node).append("svg")
     .attr("width", size[0])
@@ -21,12 +21,13 @@ const createWordcloud = data => {
 
   function updateWords(words) {
     var layout = cloud()
-        .size([500, 500])
+        .size(size)
         .words(data)
         .padding(5)
-        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        //.rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .rotate(0)
         .font("Impact")
-        .fontSize(function(d) { return d.size; })
+        .fontSize(function(d) { return d.size * 10; })
         .on("end", draw);
     layout.start();
 
