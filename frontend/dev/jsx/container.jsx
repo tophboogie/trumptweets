@@ -9,7 +9,7 @@ export default class Container extends React.Component {
   }
   render() {
     return (
-      <div className="container">
+      <div className="container-fluid gutter-top">
         {this.props.children}
       </div>
     )
