@@ -10,10 +10,15 @@ class Wordcloud extends React.Component {
       d3: ''
     }
   }
+  shouldComponentUpdate(props) {
+    return props.refresh
+  }
   componentWillReceiveProps(props) {
-    this.setState({
-      d3: createWordcloud(props.words)
-    })
+    if (props.refresh == true) {
+      this.setState({
+        d3: createWordcloud(props.words)
+      })
+    }
   }
   render() {
     return (

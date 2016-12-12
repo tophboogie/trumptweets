@@ -18,8 +18,6 @@ const getWordArray = (tweets) => {
       .replace(puncuationRegex,'')
     )
 
-    console.log(tempWords)
-
     // loop and create one array of words
     tempWords.split(/[\s\/]+/g).forEach((word) => {
       words.push(word)
