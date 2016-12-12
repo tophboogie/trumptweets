@@ -12,7 +12,7 @@ export default class Home extends React.Component {
       words: [],
       startDate: '12-1-2016',
       endDate: '12-10-2016',
-      refresh: false
+      refresh: true
     }
     this.getDateRange = this.getDateRange.bind(this)
     this.updateStartDate = this.updateStartDate.bind(this)
@@ -51,7 +51,6 @@ export default class Home extends React.Component {
     })
   }
   render() {
-    //console.log(this.state.startDate, this.state.endDate, this.state.tweets)
     var words = this.state.words
     return (
       <div>
