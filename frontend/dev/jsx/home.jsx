@@ -54,17 +54,17 @@ export default class Home extends React.Component {
     var words = this.state.words
     return (
       <div>
-        <div className="row controls">
-          <form className="form-inline" onSubmit={this.getDateRange}>
-            <div className="form-group">
-              <label htmlFor="startDate">Start Date</label>
-              <input type="text" className="form-control" id="startDate" placeholder="1-1-2016" value={this.state.startDate} onChange={this.updateStartDate} />
+        <div className='row controls'>
+          <form className='form-inline' onSubmit={this.getDateRange}>
+            <div className='form-group'>
+              <label htmlFor='startDate'>Start Date</label>
+              <input type='text' className='form-control' id='startDate' placeholder='1-1-2016' value={this.state.startDate} onChange={this.updateStartDate} />
             </div>
-            <div className="form-group">
-              <label htmlFor="endDate">End Date</label>
-              <input type="text" className="form-control" id="endDate" placeholder="12-31-2016" value={this.state.endDate} onChange={this.updateEndDate} />
+            <div className='form-group'>
+              <label htmlFor='endDate'>End Date</label>
+              <input type='text' className='form-control' id='endDate' placeholder='12-31-2016' value={this.state.endDate} onChange={this.updateEndDate} />
             </div>
-            <button type="submit" className="btn btn-default">Submit</button>
+            <button type='submit' className='btn btn-default'>Submit</button>
           </form>
         </div>
         <Wordcloud words={this.state.words} refresh={this.state.refresh} />
