@@ -16,7 +16,7 @@ import Home from './home.jsx'
 ReactDOM.render((
   <Provider tweetStore={tweetStore}>
     <Router history={hashHistory}>
-      <Route path="/" component={Container}>
+      <Route path='/' component={Container}>
         <IndexRoute component={Home} />
       </Route>
     </Router>
