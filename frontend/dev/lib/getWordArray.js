@@ -10,18 +10,19 @@ const getWordArray = (tweets) => {
   var puncuationRegex = /[",;.!?&':1234567890•\u2026-]+/g
 
   tweets.forEach((tweet) => {
+    if (tweet && tweet.tweetText) {
+      // remove stop words and run regexs from tweet string
+      var tempWords = removeStopWords(
+        tweet.tweetText.toLowerCase().trim()
+        .replace(urlRegex, '')
+        .replace(puncuationRegex,'')
+      )
 
-    // remove stop words and run regexs from tweet string
-    var tempWords = removeStopWords(
-      tweet.tweetText.toLowerCase().trim()
-      .replace(urlRegex, '')
-      .replace(puncuationRegex,'')
-    )
-
-    // loop and create one array of words
-    tempWords.split(/[\s\/]+/g).forEach((word) => {
-      words.push(word)
-    })
+      // loop and create one array of words
+      tempWords.split(/[\s\/]+/g).forEach((word) => {
+        words.push(word)
+      })
+    }
   })
 
   // count each word
