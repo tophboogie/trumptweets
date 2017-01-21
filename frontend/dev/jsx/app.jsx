@@ -10,7 +10,7 @@ import '../scss/global.scss'
 import tweetStore from '../stores/tweetStore'
 
 // components
-import Container from './container.jsx'
+import Container from './layout/container.jsx'
 import Home from './home.jsx'
 
 ReactDOM.render((

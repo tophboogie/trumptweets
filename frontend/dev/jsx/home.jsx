@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 
-import Wordcloud from './wordcloud.jsx'
+import Wordcloud from './components/wordcloud.jsx'
 import getWordArray from '../lib/getWordArray.js'
 
 export default class Home extends React.Component {
