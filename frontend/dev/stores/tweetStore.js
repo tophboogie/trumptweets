@@ -25,13 +25,6 @@ tweetStore.getTweets = () => {
       tweetStore.getTweetsSuccess(resp.data)
     })
 }
-tweetStore.getTone = (tweet) => {
-  tweetStore.loadingTweets.set(tweet._id, true) // sets a flag for this tweet id
-  post('http://localhost:3030/api/tonify', {id: tweet._id})
-    .then((resp) => {
-      tweetStore.getToneSuccess(tweet._id, resp.data)
-    })
-}
 
 
 export default tweetStore
