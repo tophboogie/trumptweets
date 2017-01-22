@@ -3,6 +3,7 @@ var app = express()
 var cors = require('cors')
 var bodyParser = require('body-parser')
 var Tweet = require('./models/tweet.js')
+var Tone = require('./models/tone.js')
 var mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost/tweets')
@@ -48,6 +49,18 @@ router.route('/tweets/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(funct
         res.send(err)
       else {
         res.jsonp(tweets)
+      }
+    })
+})
+
+router.route('/tone').get(function(req, res) {
+  Tone.findOne({})
+    .select('toneType toneScores toneText toneTextDate')
+    .exec(function (err, tone) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(tone)
       }
     })
 })
