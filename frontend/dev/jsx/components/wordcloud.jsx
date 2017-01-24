@@ -20,13 +20,12 @@ class Wordcloud extends React.Component {
                 .append("g")
                 .attr("transform", "translate(" + this.state.size[0] / 2 + "," + this.state.size[1] / 2 + ")")
   }
-  componentDidUpdate(prevProps) {
-    const {words} = prevProps
+  componentDidUpdate () {
+    const {words} = this.props
     console.log(words.length)
-    if (words.length > 0){ this.updateWordcloud() }
+    if (words.length > 0){ this.updateWordcloud(words) }
   }
-  updateWordcloud() {
-    var words = this.props.words
+  updateWordcloud(words) {
     var fill = d3.scaleOrdinal(d3.schemeCategory20)
     var layout = cloud()
       .size(this.state.size)
