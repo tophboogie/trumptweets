@@ -4,7 +4,7 @@ Mongoose.Promise = require('promise')
 var ToneSchema = new Mongoose.Schema({
   tweetId: String,
   toneObj: Object,
-  toneType: String, // day, week, speech, etc.
+  toneType: String, // tweet, day, week, speech, etc.
   toneScores: Object,
   toneText: String,
   toneTextDate: Date,

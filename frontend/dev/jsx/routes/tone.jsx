@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import {inject, observer} from 'mobx-react'
 
-class TweetTone extends Component {
+class Tone extends Component {
   componentWillMount() {
     const {getTone} = this.props.toneStore
     getTone()
@@ -19,10 +19,10 @@ class TweetTone extends Component {
   }
 }
 
-TweetTone.propTypes = {
+Tone.propTypes = {
   toneStore: PropTypes.object.isRequired
 }
 
-const TweetToneWrapped = inject('toneStore')(observer(TweetTone))
+const ToneWrapped = inject('toneStore')(observer(Tone))
 
-export default TweetToneWrapped
+export default ToneWrapped

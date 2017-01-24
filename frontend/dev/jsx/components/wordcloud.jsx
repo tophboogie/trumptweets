@@ -9,7 +9,7 @@ class Wordcloud extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      size: [1000, 1000],
+      size: [1000, 1000], // <-- get from window maybe? window.innerWidth
       nodeDom: null
     }
   }
@@ -20,17 +20,14 @@ class Wordcloud extends React.Component {
                 .append("g")
                 .attr("transform", "translate(" + this.state.size[0] / 2 + "," + this.state.size[1] / 2 + ")")
   }
-  shouldComponentUpdate() {
-    return false
+  componentDidUpdate(prevProps) {
+    const {words} = prevProps
+    console.log(words.length)
+    if (words.length > 0){ this.updateWordcloud() }
   }
-  componentWillReceiveProps(props) {
-    if (props.refresh == true) {
-      this.updateWordcloud(props)
-    }
-  }
-  updateWordcloud(props) {
+  updateWordcloud() {
+    var words = this.props.words
     var fill = d3.scaleOrdinal(d3.schemeCategory20)
-    var words = props.words
     var layout = cloud()
       .size(this.state.size)
       .words(words)
