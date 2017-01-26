@@ -9,13 +9,23 @@ import getWordArray from '../lib/getWordArray'
 
 const tweetStore = observable({
   tweets: [],
+  loading: false,
+  error: '',
   hasBeenFetched: false,
+  requestTweets: action(() => {
+    tweetStore.error = ''
+    tweetStore.loading = true
+  }),
   getTweetsSuccess: action((tweets) => {
+    tweetStore.loading = false
     tweetStore.tweets.replace(tweets)
     tweetStore.hasBeenFetched = true
     updateWordcloud()
   }),
-  getTweetsFailure: action(() => tweetStore.error = 'something happened..'),
+  getTweetsFailure: action(() => {
+    tweetStore.loading = false
+    tweetStore.error = 'something happened..'
+  }),
   startDate: moment().startOf('day').subtract(30, 'days'),
   endDate: moment().startOf('day'),
   dateRangeFocusedInput: null,
@@ -85,6 +95,7 @@ const updateWordcloud = () => {
 }
 
 tweetStore.getDateRange = () => {
+  tweetStore.requestTweets()
   get('http://localhost:3030/tweets/' + moment(tweetStore.startDate).format('M-D-YYYY') + '/to/' + moment(tweetStore.endDate).format('M-D-YYYY'))
     .then((resp) => tweetStore.getTweetsSuccess(resp.data))
     .catch((err) => tweetStore.getTweetsFailure())
