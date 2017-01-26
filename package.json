@@ -56,6 +56,7 @@
     "mongoose": "^4.7.0",
     "node-schedule": "^1.2.0",
     "promise": "^7.1.1",
+    "react-event-listener": "^0.4.1",
     "twit": "^2.2.5",
     "watson-developer-cloud": "^2.9.1"
   }
