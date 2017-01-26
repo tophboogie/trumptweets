@@ -6,8 +6,8 @@ import WordcloudControls from '../components/wordcloudControls.jsx'
 
 class Home extends Component {
   componentWillMount() {
-    const {getTweets, hasBeenFetched} = this.props.tweetStore
-    if (!hasBeenFetched) { getTweets() }
+    const {getDateRange, hasBeenFetched} = this.props.tweetStore
+    if (!hasBeenFetched) { getDateRange() }
   }
   componentDidMount() {
     const {initWordcloud} = this.props.tweetStore
@@ -19,7 +19,7 @@ class Home extends Component {
       <div>
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
-        <div style={{position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, zIndex: -1}} id='dataview'></div>
+        <div className='fullscreen' id='dataview'></div>
       </div>
     )
   }

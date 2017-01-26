@@ -78,17 +78,10 @@ const updateWordcloud = () => {
           return word.size + 'px'
       })
       .style('fill', function(word, i) { return fill(i); })
-        .text(function(word) { return word.text; })
+      .text(function(word) { return word.text; })
 
     n.exit().remove()
   }
-}
-
-// api stuff
-tweetStore.getTweets = () => {
-  get('http://localhost:3030/tweets')
-    .then((resp) => tweetStore.getTweetsSuccess(resp.data))
-    .catch((err) => tweetStore.getTweetsFailure())
 }
 
 tweetStore.getDateRange = () => {

@@ -6,7 +6,7 @@ import 'react-dates/lib/css/_datepicker.css'
 
 class WordcloudControls extends Component {
   render() {
-    const {onDatesChange, onDateRangeFocusChange, dateRangeFocusedInput, startDate, endDate} = this.props.tweetStore
+    const {onDatesChange, onDateRangeFocusChange, dateRangeFocusedInput, startDate, endDate, loading} = this.props.tweetStore
     return (
       <div>
         <DateRangePicker
