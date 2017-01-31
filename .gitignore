@@ -1,5 +1,6 @@
 .DS_Store
 .vagrant
+cached_uglify
 node_modules
 dump
 npm-debug.log

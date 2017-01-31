@@ -2,6 +2,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 var autoprefixer = require('autoprefixer')
 var path = require('path')
+var webpackUglifyJsPlugin = require('webpack-uglify-js-plugin')
+
 module.exports = {
   entry: path.join(__dirname, "/frontend/dev/jsx/app.jsx"),
   output: {
@@ -44,6 +46,18 @@ module.exports = {
   ],
   plugins: [
     new HtmlWebpackPlugin({template: 'frontend/dev/index.html'}),
-    new ExtractTextPlugin('./style.css')
+    new ExtractTextPlugin('./style.css'),
+    new webpackUglifyJsPlugin({
+      cacheFolder: path.resolve(__dirname, 'cached_uglify'),
+      debug: true,
+      minimize: true,
+      sourceMap: false,
+      output: {
+        comments: false
+      },
+      compressor: {
+        warnings: true,
+      }
+    })
   ]
 }
