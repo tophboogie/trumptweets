@@ -8,16 +8,19 @@ import '../scss/global.scss'
 
 //stores
 import tweetStore from '../stores/tweetStore'
+import toneStore from '../stores/toneStore'
 
 // components
-import Container from './container.jsx'
-import Home from './home.jsx'
+import Container from './layout/container.jsx'
+import Home from './routes/home.jsx'
+import Tone from './routes/tone.jsx'
 
 ReactDOM.render((
-  <Provider tweetStore={tweetStore}>
+  <Provider tweetStore={tweetStore} toneStore={toneStore}>
     <Router history={hashHistory}>
       <Route path='/' component={Container}>
         <IndexRoute component={Home} />
+        <Route path="tone" component={Tone}/>
       </Route>
     </Router>
   </Provider>
