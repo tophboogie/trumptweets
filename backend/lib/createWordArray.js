@@ -25,24 +25,26 @@ const getWordArray = (tweets) => {
     }
   })
 
-  // count each word
-  var wordCount = words.sort().reduce((prev, cur) => {
-    prev[cur] = (prev[cur] || 0) + 1;
-    return prev;
-  }, {});
+  return words
 
-  // arrange as array of objects, remove words < 10
-  var wordMap = []
-  for (var key in wordCount) {
-    if (wordCount.hasOwnProperty(key) && wordCount[key] > 2) {
-      wordMap.push({
-        text: key,
-        size: wordCount[key]
-      })
-    }
-  }
-
-  return wordMap
+  // // count each word
+  // var wordCount = words.sort().reduce((prev, cur) => {
+  //   prev[cur] = (prev[cur] || 0) + 1;
+  //   return prev;
+  // }, {});
+  //
+  // // arrange as array of objects, remove words < 10
+  // var wordMap = []
+  // for (var key in wordCount) {
+  //   if (wordCount.hasOwnProperty(key) && wordCount[key] > 2) {
+  //     wordMap.push({
+  //       text: key,
+  //       size: wordCount[key]
+  //     })
+  //   }
+  // }
+  //
+  // return wordMap
 }
 
 export default getWordArray
