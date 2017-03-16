@@ -4,10 +4,10 @@ Mongoose.Promise = require('promise')
 var WordMapSchema = new Mongoose.Schema({
   wordMapObj: Object,
   wordMapDate: {type: Date, unique: true},
-  _tweets: {
+  _tweets: [{
     type: Mongoose.Schema.Types.ObjectId,
     ref: 'Tweet'
-  }
+  }]
 });
 
 module.exports = Mongoose.model('WordMap', WordMapSchema)
