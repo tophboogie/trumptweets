@@ -13,7 +13,9 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
 - Install nodejs dependencies:
     - `npm install`
 - Grab all available tweets (for initializing the tweets db)
-    - `node backend/populateDB.js`
+    - `node backend/populateTweetDB.js`
+- Create wordmap database
+    - `node backend/populateWordDB.js`
 - Start new tweet scraper
     - `npm run startScraper`
 - Start API
