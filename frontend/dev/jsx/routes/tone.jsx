@@ -1,19 +1,19 @@
 import React, {Component, PropTypes} from 'react'
 import {inject, observer} from 'mobx-react'
 
+import ToneBody from '../components/toneBody.jsx'
+
 class Tone extends Component {
   componentWillMount() {
     const {getTone} = this.props.toneStore
     getTone()
   }
   render() {
-    const {loadingTone, tone} = this.props.toneStore
+    const {loading, tone} = this.props.toneStore
     return (
-      <div>
-        {loadingTone
-          ? <span>loading...</span>
-          : <span>tone</span>
-        }
+      <div >
+        {loading ? <span>loading...</span> : null}
+        <ToneBody />
       </div>
     )
   }
