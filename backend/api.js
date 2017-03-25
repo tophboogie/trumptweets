@@ -4,6 +4,7 @@ var cors = require('cors')
 var bodyParser = require('body-parser')
 var Tweet = require('./models/tweet.js')
 var Tone = require('./models/tone.js')
+var WordMap = require('./models/wordMap.js')
 var mongoose = require('mongoose')
 
 mongoose.connect('mongodb://localhost/tweets')
@@ -49,6 +50,43 @@ router.route('/tweets/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(funct
         res.send(err)
       else {
         res.jsonp(tweets)
+      }
+    })
+})
+
+router.route('/words').get(function(req, res) {
+  var today = new Date()
+  var monthAgo = new Date().setDate(today.getDate()-30)
+  WordMap.find({
+    wordMapDate: {
+      $gte: new Date(monthAgo)
+    }})
+    .sort('wordMapDate')
+    .select('wordMapObj')
+    .exec(function (err, wordMap) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(wordMap)
+      }
+    })
+})
+
+router.route('/words/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(function(req, res) {
+  var fromDate = new Date(req.params.fromYr, Number(req.params.fromMo) - 1, req.params.fromDay)
+  var toDate = new Date(req.params.toYr, Number(req.params.toMo) - 1, Number(req.params.toDay) + 1)
+  WordMap.find({
+    wordMapDate: {
+      $gt: fromDate,
+      $lt: toDate
+    }})
+    .sort('wordMapDate')
+    .select('wordMapObj')
+    .exec(function (err, wordMap) {
+      if (err)
+        res.send(err)
+      else {
+        res.jsonp(wordMap)
       }
     })
 })

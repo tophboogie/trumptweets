@@ -1,10 +1,10 @@
-import removeStopWords from './removeStopWords.js'
+var removeStopWords = require('./removeStopWords.js')
 
-const getWordArray = (tweets) => {
+module.exports = (tweets) => {
   var words = []
 
   // remove urls
-  var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
 
   // remove other punctuation
   var puncuationRegex = /[",;.!?&':1234567890•\u2026-]+/g
@@ -27,14 +27,14 @@ const getWordArray = (tweets) => {
 
   // count each word
   var wordCount = words.sort().reduce((prev, cur) => {
-    prev[cur] = (prev[cur] || 0) + 1;
-    return prev;
-  }, {});
+    prev[cur] = (prev[cur] || 0) + 1
+    return prev
+  }, {})
 
-  // arrange as array of objects, remove words < 10
+  //  arrange as array of objects, remove words < 10
   var wordMap = []
   for (var key in wordCount) {
-    if (wordCount.hasOwnProperty(key) && wordCount[key] > 2) {
+    if (wordCount.hasOwnProperty(key)) {
       wordMap.push({
         text: key,
         size: wordCount[key]
@@ -44,5 +44,3 @@ const getWordArray = (tweets) => {
 
   return wordMap
 }
-
-export default getWordArray

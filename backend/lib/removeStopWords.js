@@ -6,7 +6,7 @@
  *   Output: The original String with stop words removed
  */
 
-function removeStopWords(string) {
+module.exports = (string) => {
     var x;
     var y;
     var word;
@@ -481,5 +481,3 @@ function removeStopWords(string) {
     }
     return cleansed_string.replace(/^\s+|\s+$/g, "");
 }
-
-export default removeStopWords
