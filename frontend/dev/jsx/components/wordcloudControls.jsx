@@ -8,7 +8,14 @@ import '../../scss/wordcloud.scss'
 
 class WordcloudControls extends Component {
   render() {
-    const {onDatesChange, onDateRangeFocusChange, dateRangeFocusedInput, startDate, endDate, loading} = this.props.tweetStore
+    const {
+      onDatesChange,
+      onDateRangeFocusChange,
+      dateRangeFocusedInput,
+      startDate,
+      endDate
+    } = this.props.wordStore
+
     return (
       <div className='wordcloud-controls'>
         <DateRangePicker
@@ -21,15 +28,11 @@ class WordcloudControls extends Component {
           isOutsideRange={() => false}
           orientation={window.innerWidth > 768 ? 'horizontal' : 'vertical'}
         />
-        {loading
-          ? <div className='loading'>loading words...</div>
-          : null
-        }
       </div>
     )
   }
 }
 
-const WordcloudControlsWrapped = inject('tweetStore')(observer(WordcloudControls))
+const WordcloudControlsWrapped = inject('wordStore')(observer(WordcloudControls))
 
 export default WordcloudControlsWrapped
