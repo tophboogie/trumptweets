@@ -16,6 +16,9 @@ npm install -g npm-check-updates
 # nodejs pm2 server module
 npm install -g pm2
 
+# install yarn so we can use that if we want
+npm install -g yarn
+
 # set up environment variables
 cp /vagrant/system/credentials.sh /etc/profile.d/credentials.sh
 

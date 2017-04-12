@@ -11,17 +11,20 @@ class Home extends Component {
     init()
   }
   render() {
-    const {resizeWordcloud} = this.props.wordStore
+    const {resizeWordcloud, wordsObjArray, wordcloudWidth, wordcloudHeight} = this.props.wordStore
     return (
       <div>
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
-        <Wordcloud />
+        <Wordcloud
+          words={wordsObjArray}
+          width={wordcloudWidth}
+          height={wordcloudHeight}
+        />
       </div>
     )
   }
 }
 
 const HomeWrapped = inject('wordStore')(observer(Home))
-
 export default HomeWrapped

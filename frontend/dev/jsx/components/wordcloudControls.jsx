@@ -34,5 +34,4 @@ class WordcloudControls extends Component {
 }
 
 const WordcloudControlsWrapped = inject('wordStore')(observer(WordcloudControls))
-
 export default WordcloudControlsWrapped
