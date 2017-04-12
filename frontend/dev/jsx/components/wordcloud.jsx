@@ -1,59 +1,54 @@
 import React, {Component} from 'react'
-import cloud from 'd3-cloud'
 import * as d3 from 'd3'
+import cloud from 'd3-cloud'
 const fill = d3.scaleOrdinal(d3.schemeCategory20)
-var layout
 
 class Wordcloud extends Component {
   componentDidMount () {
-    const {width, height} = this.props
-    layout = this._createLayout()
-    layout.words([{size:1, text:'loading...'}]).size([width, height])
-    layout.start()
+    this._runTheThing(this.props)
   }
   componentWillReceiveProps (nextProps) {
-    const {words, width, height} = nextProps
-    layout.stop()
-    layout.words(words.slice()).size([width, height])
-    layout.start()
+    // this._runTheThing(nextProps)
+  }
+  shouldComponentUpdate () {
+    return false
   }
   render () {
-    const {width, height, words} = this.props
-    if (words.length) {  }
-    return (
-      <div className='fullscreen'>
-        <svg width={width} height={height}>
-          <g ref='g' transform={'translate(' + width / 2 + ',' + height / 2 + ')'} />
-        </svg>
-      </div>
-    )
+    return <div className='fullscreen' ref='canvas' />
   }
-  _createLayout = () => {
-    return cloud()
+  _runTheThing = ({words, width, height}) => {
+    const draw = (words) => {
+      const n = d3.select(this.refs.canvas)
+                  .html('')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .append('g')
+                  .attr('transform', 'translate(' + width/2 + ',' + height/2 + ')')
+                  .selectAll('text')
+                  .data(words)
+
+      n.enter().append('text')
+        .attr('text-anchor', 'middle')
+        .style('font-family', 'Impact')
+        .merge(n)
+        .transition()
+        .attr('transform', (word) => 'translate(' + [word.x, word.y] + ')rotate(' + word.rotate + ')')
+        .style('font-size', (word) => word.size + 'px')
+        .style('fill', (word, i) => fill(i))
+        .text((word) => word.text)
+      n.exit().remove()
+    }
+    const layout = cloud()
       .timeInterval(10)
       .padding(5)
       .rotate(() => ~~(Math.random() * 2) * 90)
-      .font('Impact')
-      .fontSize((d) => d.size * 40)
-      .on('end', this._draw)
-      .on('word', this._progress)
+      .font('Impact').fontSize((d) => d.size * 40)
+      .words(words)
+      .size([width, height])
+      .on('end', draw)
+    layout.start()
   }
-  _draw = (words) => {
-    const n = d3.select(this.refs.g).html('').selectAll('text').data(words)
-    n.enter().append('text')
-      .attr('text-anchor', 'middle')
-      .style('font-family', 'Impact')
-      .merge(n)
-      .transition()
-      .attr('transform', (word) => 'translate(' + [word.x, word.y] + ')rotate(' + word.rotate + ')')
-      .style('font-size', (word) => word.size + 'px')
-      .style('fill', (word, i) => fill(i))
-      .text((word) => word.text)
-    n.exit().remove()
-  }
-  // _progress = () => {
-  //   // console.log(prog++)
-  // }
 }
 
 export default Wordcloud

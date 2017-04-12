@@ -5,26 +5,26 @@ import EventListener from 'react-event-listener'
 import Wordcloud from '../components/wordcloud.jsx'
 import WordcloudControls from '../components/wordcloudControls.jsx'
 
-class Home extends Component {
+@inject('wordcloudStore')
+@observer class Home extends Component {
   componentWillMount() {
-    const {init} = this.props.wordStore
+    const {init} = this.props.wordcloudStore
     init()
   }
   render() {
-    const {resizeWordcloud, wordsObjArray, wordcloudWidth, wordcloudHeight} = this.props.wordStore
+    const {resizeWordcloud, width, height, filteredWordsObjArray} = this.props.wordcloudStore
     return (
       <div>
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
         <Wordcloud
-          words={wordsObjArray}
-          width={wordcloudWidth}
-          height={wordcloudHeight}
+          width={width}
+          height={height}
+          words={filteredWordsObjArray}
         />
       </div>
     )
   }
 }
 
-const HomeWrapped = inject('wordStore')(observer(Home))
-export default HomeWrapped
+export default Home

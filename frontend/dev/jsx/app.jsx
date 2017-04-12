@@ -7,13 +7,13 @@ import {Provider} from 'mobx-react'
 import '../scss/global.scss'
 
 //stores
-import wordStore from '../stores/wordStore'
+import wordcloudStore from '../stores/wordcloudStore'
 
 // components
 import Home from './routes/home.jsx'
 
 ReactDOM.render((
-  <Provider wordStore={wordStore}>
+  <Provider wordcloudStore={wordcloudStore}>
     <Router history={hashHistory}>
       <Route path='/' component={Home} />
     </Router>

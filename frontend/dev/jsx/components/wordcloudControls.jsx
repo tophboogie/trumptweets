@@ -6,7 +6,8 @@ import 'react-dates/lib/css/_datepicker.css'
 
 import '../../scss/wordcloud.scss'
 
-class WordcloudControls extends Component {
+@inject('wordcloudStore')
+@observer class WordcloudControls extends Component {
   render() {
     const {
       onDatesChange,
@@ -14,7 +15,7 @@ class WordcloudControls extends Component {
       dateRangeFocusedInput,
       startDate,
       endDate
-    } = this.props.wordStore
+    } = this.props.wordcloudStore
 
     return (
       <div className='wordcloud-controls'>
@@ -33,5 +34,4 @@ class WordcloudControls extends Component {
   }
 }
 
-const WordcloudControlsWrapped = inject('wordStore')(observer(WordcloudControls))
-export default WordcloudControlsWrapped
+export default WordcloudControls
