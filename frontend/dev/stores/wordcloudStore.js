@@ -73,7 +73,6 @@ class WordcloudStore {
     this.error = null
     this.requesting = true
   }
-  @observable hasBeenReceivedOnce = false
   @action getWordsSuccess = (words) => {
     words.forEach(({wordMapDate, wordMapObj}) => {
       this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordMapObj)
@@ -89,25 +88,24 @@ class WordcloudStore {
     let serverStart = start
     let serverEnd = end
     let shouldGet = false
-    console.log('the others')
     for (let day of range.by('day')) {
       if (this.wordsByDate.has(day.format())) {
         serverStart = moment(serverStart).add(1, 'day')
       } else {
-        shouldGet = true
+        this.getWords(serverStart, serverEnd)
         break
       }
     }
-    if (shouldGet) {
-      this.requestWords()
-      const url = 'http://localhost:3030/words/' +
-                  moment(serverStart).format('MM-DD-YYYY') +
-                  '/to/' +
-                  moment(serverEnd).format('MM-DD-YYYY')
-      get(url)
-        .then((resp) => this.getWordsSuccess(resp.data))
-        .catch((err) => this.getWordsFailure())
-    }
+  }
+  getWords = (start, end) => {
+    this.requestWords()
+    const url = 'http://localhost:3030/words/' +
+                moment(start).format('MM-DD-YYYY') +
+                '/to/' +
+                moment(end).format('MM-DD-YYYY')
+    get(url)
+      .then((resp) => this.getWordsSuccess(resp.data))
+      .catch((err) => this.getWordsFailure())
   }
 }
 

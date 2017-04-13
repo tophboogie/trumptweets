@@ -12,16 +12,12 @@ import WordcloudControls from '../components/wordcloudControls.jsx'
     init()
   }
   render() {
-    const {resizeWordcloud, width, height, filteredWordsObjArray} = this.props.wordcloudStore
+    const {resizeWordcloud, width, height, filteredWordsObjArray, loadingWords} = this.props.wordcloudStore
     return (
       <div>
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
-        <Wordcloud
-          width={width}
-          height={height}
-          words={filteredWordsObjArray}
-        />
+        <Wordcloud width={width} height={height} words={filteredWordsObjArray} />
       </div>
     )
   }
