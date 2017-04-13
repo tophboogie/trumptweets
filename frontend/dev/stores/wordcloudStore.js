@@ -12,7 +12,6 @@ class WordcloudStore {
   @action init = () => {
     this.getDateRange(this.startDate, this.endDate)
     autorun(() => this.startWordLayout(this.filteredWordsObjArray))
-    // autorun(() => this.redrawWordcloud(this.width, this.height))
   }
 
   // LOADING CRAZY -------------------------------------------------------------
@@ -44,7 +43,6 @@ class WordcloudStore {
       this.waitingForCloud = true
       this.startLoading()
       const screenSizeNormalize = this.width > 1200 ? 100 : 50
-      console.log(screenSizeNormalize)
       const normalizedFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
         ? Math.ceil(screenSizeNormalize / wordObjs[0].size) : 80
       cloud().words(wordObjs)
