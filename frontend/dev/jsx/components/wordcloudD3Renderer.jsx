@@ -1,18 +1,22 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import * as d3 from 'd3'
 const fill = d3.scaleOrdinal(d3.schemeCategory20)
 
 export default class WordcloudD3Renderer extends Component {
+  static propTypes = {
+    what: PropTypes.string,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    words: PropTypes.array
+  }
   componentDidMount () {
     this._draw(this.props.words)
   }
   componentWillUnmount () {
     const node = this._getNode()
-    console.log('cleaning' + this.props.what)
     node.html('')
   }
   render () {
-    console.log('rendering ' + this.props.what)
     const {width, height} = this.props
     return (
       <div className='fullscreen'>
