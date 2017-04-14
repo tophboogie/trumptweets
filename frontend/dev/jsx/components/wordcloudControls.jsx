@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {inject, observer} from 'mobx-react'
 
 import {DateRangePicker} from 'react-dates'
@@ -8,6 +9,17 @@ import '../../scss/wordcloud.scss'
 
 @inject('wordcloudStore')
 @observer class WordcloudControls extends Component {
+  static propTypes = {
+    wordcloudStore: PropTypes.shape({
+      onDatesChange: PropTypes.func,
+      onDateRangeFocusChange: PropTypes.func,
+      dateRangeFocusedInput: PropTypes.string,
+      startDate: PropTypes.object,
+      endDate: PropTypes.object,
+      showLoading: PropTypes.bool,
+      orientation: PropTypes.string
+    })
+  }
   render() {
     const {
       onDatesChange,
