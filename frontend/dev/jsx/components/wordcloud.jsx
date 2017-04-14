@@ -6,7 +6,7 @@ import WordcloudD3Renderer from '../components/wordcloudD3Renderer.jsx'
 @inject('wordcloudStore')
 @observer class Wordcloud extends Component {
   static propTypes = {
-    d3CloudWords: PropTypes.object, // <-- this is a mobx array (which is an object...)
+    d3CloudWords: PropTypes.array,
     showWords: PropTypes.bool,
     width: PropTypes.number,
     height: PropTypes.number

@@ -14,7 +14,9 @@ import '../../scss/wordcloud.scss'
       onDateRangeFocusChange,
       dateRangeFocusedInput,
       startDate,
-      endDate
+      endDate,
+      showLoading,
+      orientation
     } = this.props.wordcloudStore
 
     return (
@@ -27,7 +29,8 @@ import '../../scss/wordcloud.scss'
           startDate={startDate}
           endDate={endDate}
           isOutsideRange={() => false}
-          orientation={window.innerWidth > 768 ? 'horizontal' : 'vertical'}
+          orientation={orientation}
+          disabled={showLoading}
         />
       </div>
     )

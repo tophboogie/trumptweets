@@ -64,13 +64,14 @@ class WordcloudStore {
   }
 
   // DATES ---------------------------------------------------------------------
+  @computed get orientation () { return this.width > 768 ? 'horizontal' : 'vertical' }
   @observable startDate = moment().startOf('day').subtract(4, 'days')
   @observable endDate = moment().startOf('day')
   @observable dateRangeFocusedInput = null
   @action onDateRangeFocusChange = (newFocus) => this.dateRangeFocusedInput = newFocus
   @action onDatesChange = ({startDate, endDate}) => {
-    this.startDate = moment(startDate).startOf('day')
-    this.endDate = moment(endDate).startOf('day')
+    if (startDate) { this.startDate = moment(startDate).startOf('day') }
+    if (endDate) { this.endDate = moment(endDate).startOf('day') }
     if (this.dateRangeFocusedInput === null) {
        this.getDateRange(this.startDate, this.endDate)
     }
