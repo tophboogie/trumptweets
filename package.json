@@ -25,8 +25,10 @@
     "axios": "^0.15.3",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-1": "^6.24.1",
     "bootstrap-sass": "^3.3.7",
     "css-loader": "^0.26.0",
     "d3": "^4.4.0",
@@ -42,6 +44,7 @@
     "react-addons-shallow-compare": "^15.4.2",
     "react-dates": "10.1.1",
     "react-dom": "^15.4.1",
+    "react-event-listener": "^0.4.1",
     "react-router": "^3.0.0",
     "sass-loader": "^4.0.2",
     "webpack": "^1.13.3",
@@ -49,8 +52,6 @@
     "webpack-uglify-js-plugin": "^1.1.9"
   },
   "dependencies": {
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-stage-1": "^6.24.1",
     "big-integer": "^1.6.17",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
@@ -61,7 +62,6 @@
     "mongoose": "^4.7.0",
     "node-schedule": "^1.2.0",
     "promise": "^7.1.1",
-    "react-event-listener": "^0.4.1",
     "twit": "^2.2.5",
     "watson-developer-cloud": "^2.9.1"
   }

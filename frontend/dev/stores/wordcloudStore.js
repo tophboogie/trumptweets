@@ -1,4 +1,4 @@
-import {observable, action, useStrict, computed, autorun} from 'mobx'
+import {observable, action, useStrict, computed, autorun, toJS} from 'mobx'
 useStrict(true)
 import {get, post} from 'axios'
 import Moment from 'moment'
@@ -9,27 +9,26 @@ import cloud from 'd3-cloud'
 const BASE_URL = 'http://0.0.0.0:3030/words/'
 const INITIAL_DAYS_BACK = 4
 const WORD_ARRAY_MAX_LENGTH = 200
-const BASE_FONT_SIZE = 100
-const BASE_FONT_SIZE_SMALLER = 70
-const SCREEN_SIZE_FONT_BREAKPOINT = 1200
-const SCREEN_SIZE_CALENDAR_BREAKPOINT_1 = 475
-const SCREEN_SIZE_CALENDAR_BREAKPOINT_2 = 950
-const SCREEN_SIZE_CALENDAR_BREAKPOINT_3 = 1425
+const FONT_SIZE_ROOMY = 150
+const FONT_SIZE_NORMAL = 110
+const FONT_SIZE_COMPACT = 70
+const SCREEN_SIZE_BREAKPOINT_1 = 475
+const SCREEN_SIZE_BREAKPOINT_2 = 950
+const SCREEN_SIZE_BREAKPOINT_3 = 1425
 
 
 class WordcloudStore {
   @action init = () => {
     this.getDateRange(this.startDate, this.endDate)
-    autorun(() => this.startWordLayout(this.filteredWordsObjArray))
+    autorun(() => this.startWordLayout(this.filteredWordsObjArray.slice()))
   }
 
   // GENERATE WORDCLOUD OBJECTS ------------------------------------------------
   asyncCloudGen = (wordObjs, onEnd) => {
-    const fontSize = this.width > SCREEN_SIZE_FONT_BREAKPOINT
-      ? BASE_FONT_SIZE : BASE_FONT_SIZE_SMALLER
+    console.log(this.fontSize)
     const normalizedFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
-      ? Math.ceil(fontSize / wordObjs[0].size) : fontSize
-    console.log(normalizedFontSize)
+      ? Math.floor(this.fontSize / wordObjs[0].size) : this.fontSize
+
     cloud().words(wordObjs)
            .timeInterval(10)
            .padding(5)
@@ -46,11 +45,11 @@ class WordcloudStore {
   @observable isLoading = false
   @action startLoading = () => {
     const loadingWordObjs = [{text: 'loading...', size: 1}]
-    this.asyncCloudGen(loadingWordObjs, this.setLoadingD3CloudWords)
+    this.asyncCloudGen(loadingWordObjs.slice(), this.setLoadingD3CloudWords)
   }
-  @action setLoadingD3CloudWords = (wordForD3) => {
+  @action setLoadingD3CloudWords = (d3LoadingWords) => {
     this.isLoading = true
-    this.loadingD3CloudWords = wordForD3
+    this.loadingD3CloudWords = d3LoadingWords
   }
 
   // LAYOUT --------------------------------------------------------------------
@@ -63,7 +62,9 @@ class WordcloudStore {
     if (this.autorunFirstPass) {
       this.waitingForCloud = true
       this.startLoading()
-      this.asyncCloudGen(wordObjs, this.setD3CloudWords)
+      const objsForCloudGen = []
+      wordObjs.forEach((word, i) => objsForCloudGen[i] = Object.assign({}, word))
+      this.asyncCloudGen(objsForCloudGen, this.setD3CloudWords)
     } else {
       this.autorunFirstPass = true // <-- autorun first pass
     }
@@ -71,15 +72,15 @@ class WordcloudStore {
   @action setD3CloudWords = (d3Words) => {
     this.isLoading = false
     this.waitingForCloud = false
-    this.d3CloudWords = d3Words.slice()
+    this.d3CloudWords = d3Words
   }
 
   // DATES ---------------------------------------------------------------------
   @computed get orientation () { return 'horizontal' }
   @computed get numberOfMonths () {
-    if (this.width > SCREEN_SIZE_CALENDAR_BREAKPOINT_3) { return 4 }
-    else if (this.width > SCREEN_SIZE_CALENDAR_BREAKPOINT_2) { return 3 }
-    else if (this.width > SCREEN_SIZE_CALENDAR_BREAKPOINT_1) { return 2 }
+    if (this.width > SCREEN_SIZE_BREAKPOINT_3) { return 4 }
+    else if (this.width > SCREEN_SIZE_BREAKPOINT_2) { return 3 }
+    else if (this.width > SCREEN_SIZE_BREAKPOINT_1) { return 2 }
     else { return 1 }
   }
   @observable startDate = moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
@@ -107,7 +108,12 @@ class WordcloudStore {
   @action setWordcloudSize = () => {
     this.width = window.innerWidth
     this.height = window.innerHeight
-    this.startWordLayout(this.filteredWordsObjArray)
+    this.startWordLayout(this.filteredWordsObjArray.slice())
+  }
+  @computed get fontSize () {
+    if (this.width > SCREEN_SIZE_BREAKPOINT_3) { return FONT_SIZE_ROOMY}
+    else if (this.width > SCREEN_SIZE_BREAKPOINT_1) { return FONT_SIZE_NORMAL }
+    else { return FONT_SIZE_COMPACT }
   }
 
   // FILTERING -----------------------------------------------------------------
@@ -119,34 +125,33 @@ class WordcloudStore {
   }
   @computed get filteredWordsObjArray () {
     if (this.hasError) {
-      return [{text: `⛔️ oops...`, size: 4}, {text: 'an error occurred', size: 1}]
+      return [{text: ` ⛔️ oops...`, size: 4}, {text: 'an error occurred', size: 1}]
     }
 
     const wordObjsForCloud = this.getWordsObjsByDate(this.wordsByDate, this.filterStartDate, this.filterEndDate)
     if (wordObjsForCloud.length > 0) {
       // This needs to be limited a bit because the cloud takes forever if the
       // array is too large - we can think about this more later perhaps
-      return wordObjsForCloud.slice(0, WORD_ARRAY_MAX_LENGTH)
+      return toJS(wordObjsForCloud.slice(0, WORD_ARRAY_MAX_LENGTH))
     } else {
       return [{text: ` 🦄 no data`, size: 4}, {text: 'try another date range', size: 1}]
     }
   }
   getWordsObjsByDate = (wordsByDate, start, end) => {
     const wordObjsByDate = []
-    wordsByDate.keys().forEach((date) => {
+    wordsByDate.forEach((wordObjs, date) => {
       if (moment(date) >= moment(start) && moment(date) <= moment(end)) {
-        const wordObjs = this.wordsByDate.get(date)
         wordObjs.forEach((wordObj) => {
           const index = wordObjsByDate.findIndex((w) => w.text === wordObj.text)
           if (index > -1) {
             wordObjsByDate[index].size += wordObj.size
           } else {
-            wordObjsByDate.push(Object.assign({}, wordObj))
+            wordObjsByDate.push(toJS(wordObj))
           }
         })
       }
     })
-    return wordObjsByDate.sort((a, b) => b.size - a.size).slice()
+    return wordObjsByDate.sort((a, b) => b.size - a.size)
   }
   // DATA/CACHING --------------------------------------------------------------
   @observable wordsByDate = observable.shallowMap()
@@ -184,8 +189,8 @@ class WordcloudStore {
   }
   @action getWordsSuccess = (words) => {
     this.receivedOnce = true
-    words.forEach(({wordMapDate, wordMapObj}) => {
-      this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordMapObj)
+    words.forEach(({wordMapDate, wordMapObj: wordObjArray}) => { // <-- we should rename this variable in the collection
+      this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordObjArray.slice())
     })
     this.requesting = false
     this.setFilterDates(this.startDate, this.endDate)

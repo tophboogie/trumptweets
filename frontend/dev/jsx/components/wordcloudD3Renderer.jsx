@@ -22,7 +22,10 @@ export default class WordcloudD3Renderer extends Component {
     return (
       <div className='fullscreen'>
         <svg width='100%' height='100%'>
-          <g style={{position: 'relative'}} transform={'translate(' + width/2 + ',' + height/2 + ')'} ref='canvas' />
+          <g
+            ref='canvas'
+            transform={'translate(' + width/2 + ',' + height/2 + ')'}
+          />
         </svg>
       </div>
     )
@@ -37,8 +40,6 @@ export default class WordcloudD3Renderer extends Component {
         .style('font-family', 'Impact')
         .merge(node)
         .transition()
-        .attr('hoverinfo', (word) => word.text)
-        .attr('flow', (word) => 'up')
         .attr('transform', (word) => 'translate(' + [word.x, word.y] + ')rotate(' + word.rotate + ')')
         .style('font-size', (word) => word.size + 'px')
         .style('fill', (word, i) => fill(i))
