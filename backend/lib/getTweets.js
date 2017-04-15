@@ -1,4 +1,4 @@
-var user_id = '37710752' // elon user id
+var user_id = '25073877' // trump user id
 
 var Twit = require('twit')
 var Promise = require('promise')

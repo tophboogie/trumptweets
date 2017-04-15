@@ -1,11 +1,32 @@
+// $react-dates-color-primary: $some-color-specific-to-my-project;
+// $react-dates-color-primary-dark: $some-other-color-specific-to-my-project;
+@import '~react-dates/css/variables.scss';
+@import '~react-dates/css/styles.scss';
+
+// overrides for react-dates styles
+.CalendarDay--blocked-calendar {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+// wordcloud styles
 .wordcloud-controls {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 18px;
+  left: 18px;
   opacity: 0.8;
   cursor: pointer;
   transition: opacity ease 0.5s;
   &:hover {
     opacity: 1;
+  }
+  @media (min-width: 480px) {
+    top: 25px;
+    left: 25px;
+  }
+}
+body {
+  text {
+    cursor: help;
   }
 }
