@@ -11,7 +11,6 @@ const INITIAL_DAYS_BACK = 4
 const WORD_ARRAY_MAX_LENGTH = 200
 const BASE_FONT_SIZE = 100
 const BASE_FONT_SIZE_SMALLER = 70
-const MESSAGE_FONT_SIZE = 80
 const SCREEN_SIZE_FONT_BREAKPOINT = 1200
 const SCREEN_SIZE_CALENDAR_BREAKPOINT_1 = 475
 const SCREEN_SIZE_CALENDAR_BREAKPOINT_2 = 950
@@ -24,19 +23,30 @@ class WordcloudStore {
     autorun(() => this.startWordLayout(this.filteredWordsObjArray))
   }
 
-  // LOADING CRAZY -------------------------------------------------------------
-  @computed get showLoading () { return this.isLoading && !this.error }
-  @observable.ref loadingD3CloudWords = []
-  @observable isLoading = false
-  @action startLoading = () => {
-    cloud().words([{text: 'loading...', size: MESSAGE_FONT_SIZE}])
+  // GENERATE WORDCLOUD OBJECTS ------------------------------------------------
+  asyncCloudGen = (wordObjs, onEnd) => {
+    const fontSize = this.width > SCREEN_SIZE_FONT_BREAKPOINT
+      ? BASE_FONT_SIZE : BASE_FONT_SIZE_SMALLER
+    const normalizedFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
+      ? Math.ceil(fontSize / wordObjs[0].size) : fontSize
+    console.log(normalizedFontSize)
+    cloud().words(wordObjs)
            .timeInterval(10)
            .padding(5)
            .rotate(() => ~~(Math.random() * 2) * 90)
-           .font('Impact').fontSize((worbObj) => worbObj.size)
+           .font('Impact').fontSize((wordObj) => Math.ceil(wordObj.size * normalizedFontSize))
            .size([this.width, this.height])
-           .on('end', this.setLoadingD3CloudWords)
+           .on('end', onEnd)
            .start()
+  }
+
+  // LOADING CRAZY -------------------------------------------------------------
+  @computed get showLoading () { return this.isLoading }
+  @observable.ref loadingD3CloudWords = []
+  @observable isLoading = false
+  @action startLoading = () => {
+    const loadingWordObjs = [{text: 'loading...', size: 1}]
+    this.asyncCloudGen(loadingWordObjs, this.setLoadingD3CloudWords)
   }
   @action setLoadingD3CloudWords = (wordForD3) => {
     this.isLoading = true
@@ -44,26 +54,16 @@ class WordcloudStore {
   }
 
   // LAYOUT --------------------------------------------------------------------
-  @computed get fontSizeAdjusted () { return this.width > SCREEN_SIZE_FONT_BREAKPOINT ? BASE_FONT_SIZE : BASE_FONT_SIZE_SMALLER }
-  @computed get showWords () { return this.receivedOnce && !this.waitingForCloud && !this.requesting }
+  @computed get showWords () { return (this.receivedOnce || this.hasError) && !this.waitingForCloud && !this.requesting }
   @observable.ref d3CloudWords = []
   @observable waitingForCloud = true
   @observable autorunFirstPass = false // <-- this is used because autorun runs once to start the observables
   @action startWordLayout = (wordObjs) => {
+    this.dateRangeFocusedInput = null // <-- clear the date picker
     if (this.autorunFirstPass) {
       this.waitingForCloud = true
       this.startLoading()
-      const fontSize = this.fontSizeAdjusted
-      const normalizedFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
-        ? Math.ceil(fontSize / wordObjs[0].size) : fontSize
-      cloud().words(wordObjs)
-             .timeInterval(10)
-             .padding(5)
-             .rotate(() => ~~(Math.random() * 2) * 90)
-             .font('Impact').fontSize((wordObj) => Math.ceil(wordObj.size * normalizedFontSize))
-             .size([this.width, this.height])
-             .on('end', this.setD3CloudWords)
-             .start()
+      this.asyncCloudGen(wordObjs, this.setD3CloudWords)
     } else {
       this.autorunFirstPass = true // <-- autorun first pass
     }
@@ -71,7 +71,7 @@ class WordcloudStore {
   @action setD3CloudWords = (d3Words) => {
     this.isLoading = false
     this.waitingForCloud = false
-    this.d3CloudWords = d3Words
+    this.d3CloudWords = d3Words.slice()
   }
 
   // DATES ---------------------------------------------------------------------
@@ -87,12 +87,10 @@ class WordcloudStore {
   @observable dateRangeFocusedInput = null
   @action onDateRangeFocusChange = (newFocus) => this.dateRangeFocusedInput = newFocus
   @action onDatesChange = ({startDate, endDate}) => {
-    if (startDate) { this.startDate = moment(startDate).startOf('day') }
-    if (endDate) { this.endDate = moment(endDate).startOf('day') }
+    if (startDate) { this.startDate = startDate }
+    if (endDate) { this.endDate = endDate }
   }
-  @action onDateRangeClose = () => {
-    this.getDateRange(this.startDate, this.endDate)
-  }
+  @action onDateRangeClose = () => this.getDateRange(this.startDate, this.endDate)
 
   // SIZING --------------------------------------------------------------------
   // we need a way to delay the drawing because the onResize events are frequent
@@ -107,7 +105,6 @@ class WordcloudStore {
   @observable width = window.innerWidth
   @observable height = window.innerHeight
   @action setWordcloudSize = () => {
-    this.dateRangeFocusedInput = null // <-- clear the date picker
     this.width = window.innerWidth
     this.height = window.innerHeight
     this.startWordLayout(this.filteredWordsObjArray)
@@ -117,37 +114,40 @@ class WordcloudStore {
   @observable filterStartDate = this.startDate
   @observable filterEndDate = this.endDate
   @action setFilterDates = (start, end) => {
-    this.filterStartDate = start
-    this.filterEndDate = end
+    this.filterStartDate = moment(start).startOf('day')
+    this.filterEndDate = moment(end).startOf('day')
   }
   @computed get filteredWordsObjArray () {
-    if (this.error) {
-      return [{text: 'an', size: MESSAGE_FONT_SIZE * 0.4},
-              {text: 'error', size: MESSAGE_FONT_SIZE * 1.1},
-              {text: 'occurred', size: MESSAGE_FONT_SIZE * 0.6}]
+    if (this.hasError) {
+      return [{text: `⛔️ oops...`, size: 4}, {text: 'an error occurred', size: 1}]
     }
-    const wordObjsForCloud = []
-    this.wordsByDate.keys().forEach((date) => {
-      if (moment(date) >= moment(this.filterStartDate) && moment(date) <= moment(this.filterEndDate)) {
+
+    const wordObjsForCloud = this.getWordsObjsByDate(this.wordsByDate, this.filterStartDate, this.filterEndDate)
+    if (wordObjsForCloud.length > 0) {
+      // This needs to be limited a bit because the cloud takes forever if the
+      // array is too large - we can think about this more later perhaps
+      return wordObjsForCloud.slice(0, WORD_ARRAY_MAX_LENGTH)
+    } else {
+      return [{text: ` 🦄 no data`, size: 4}, {text: 'try another date range', size: 1}]
+    }
+  }
+  getWordsObjsByDate = (wordsByDate, start, end) => {
+    const wordObjsByDate = []
+    wordsByDate.keys().forEach((date) => {
+      if (moment(date) >= moment(start) && moment(date) <= moment(end)) {
         const wordObjs = this.wordsByDate.get(date)
         wordObjs.forEach((wordObj) => {
-          const index = wordObjsForCloud.findIndex((w) => w.text === wordObj.text)
+          const index = wordObjsByDate.findIndex((w) => w.text === wordObj.text)
           if (index > -1) {
-            wordObjsForCloud[index].size += wordObj.size
+            wordObjsByDate[index].size += wordObj.size
           } else {
-            wordObjsForCloud.push(Object.assign({}, wordObj))
+            wordObjsByDate.push(Object.assign({}, wordObj))
           }
         })
       }
     })
-    wordObjsForCloud.sort((a, b) => b.size - a.size)
-    // This needs to be limited a bit because the cloud takes forever if the
-    // array is too large - we can think about this more later perhaps
-    return wordObjsForCloud.length > 0
-      ? wordObjsForCloud.slice(0, WORD_ARRAY_MAX_LENGTH)
-      : [{text: 'nothing', size: MESSAGE_FONT_SIZE}, {text: 'here',size: MESSAGE_FONT_SIZE * 0.7}]
+    return wordObjsByDate.sort((a, b) => b.size - a.size).slice()
   }
-
   // DATA/CACHING --------------------------------------------------------------
   @observable wordsByDate = observable.shallowMap()
   @action getDateRange = (start, end) => {
@@ -155,8 +155,8 @@ class WordcloudStore {
     // could be optimized in the case that we have some dates working backwards
     // from the endDate
     const range = moment.range(start, end)
-    let serverStart = start
-    let serverEnd = end
+    let serverStart = moment(start).startOf('day')
+    let serverEnd = moment(end).startOf('day')
     for (let day of range.by('day')) {
       if (this.wordsByDate.has(day.format())) {
         if (serverStart.format() === serverEnd.format()) {
@@ -177,6 +177,7 @@ class WordcloudStore {
   @observable requesting = false
   @observable receivedOnce = false
   @observable error = null
+  @computed get hasError () { return !!this.error }
   @action requestWords = () => {
     this.error = null
     this.requesting = true

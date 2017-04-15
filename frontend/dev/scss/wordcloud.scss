@@ -21,12 +21,13 @@
     opacity: 1;
   }
   @media (min-width: 480px) {
-    top: 25px;
-    left: 25px;
+    top: 22px;
+    left: 22px;
   }
 }
-body {
-  text {
+
+text {
+  &:hover {
     cursor: help;
   }
 }
