@@ -26,6 +26,7 @@ class WordcloudStore {
 
   // GENERATE WORDCLOUD OBJECTS ------------------------------------------------
   asyncCloudGen = (wordObjs, onEnd) => {
+    wordObjs.forEach((word) => word.tooltip = word.size === 1 ? '1 use' : word.size + ' uses')
     const normalizeFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
       ? this.fontSize / wordObjs[0].size : this.fontSize
     cloud().words(wordObjs)

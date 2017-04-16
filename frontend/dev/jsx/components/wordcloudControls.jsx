@@ -37,7 +37,7 @@ import '../../scss/wordcloud.scss'
     } = this.props.wordcloudStore
 
     return (
-      <div className='wordcloud-controls'>
+      <div className='wordcloud__controls'>
         <DateRangePicker
           onDatesChange={onDatesChange}
           onFocusChange={onDateRangeFocusChange}

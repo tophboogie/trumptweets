@@ -20,7 +20,7 @@ import WordcloudD3Renderer from '../components/wordcloudD3Renderer.jsx'
       <div>
         {showWords &&
           <WordcloudD3Renderer
-            what='words'
+            tooltip
             width={width}
             height={height}
             words={d3CloudWords.slice()}

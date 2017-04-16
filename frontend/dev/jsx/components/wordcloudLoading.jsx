@@ -20,7 +20,6 @@ import WordcloudD3Renderer from '../components/wordcloudD3Renderer.jsx'
       <div>
         {showLoading &&
           <WordcloudD3Renderer
-            what='loading'
             width={width}
             height={height}
             words={loadingD3CloudWords.slice()}
