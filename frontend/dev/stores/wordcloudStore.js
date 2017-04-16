@@ -9,8 +9,9 @@ import cloud from 'd3-cloud'
 const BASE_URL = 'http://0.0.0.0:3030/words/'
 const INITIAL_DAYS_BACK = 4
 const WORD_ARRAY_MAX_LENGTH = 200
-const FONT_SIZE_ROOMY = 150
-const FONT_SIZE_NORMAL = 110
+const FONT_SIZE_MIN = 10
+const FONT_SIZE_ROOMY = 120 // <-- set at max emoji size 🤓 (for chrome that is)
+const FONT_SIZE_NORMAL = 100
 const FONT_SIZE_COMPACT = 70
 const SCREEN_SIZE_BREAKPOINT_1 = 475
 const SCREEN_SIZE_BREAKPOINT_2 = 950
@@ -25,15 +26,16 @@ class WordcloudStore {
 
   // GENERATE WORDCLOUD OBJECTS ------------------------------------------------
   asyncCloudGen = (wordObjs, onEnd) => {
-    console.log(this.fontSize)
-    const normalizedFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
-      ? Math.floor(this.fontSize / wordObjs[0].size) : this.fontSize
-
+    const normalizeFontSize = wordObjs.length && Number.isInteger(wordObjs[0].size)
+      ? this.fontSize / wordObjs[0].size : this.fontSize
     cloud().words(wordObjs)
            .timeInterval(10)
            .padding(5)
            .rotate(() => ~~(Math.random() * 2) * 90)
-           .font('Impact').fontSize((wordObj) => Math.ceil(wordObj.size * normalizedFontSize))
+           .font('Impact').fontSize((wordObj) => {
+             const normalized = wordObj.size * normalizeFontSize
+             return normalized > FONT_SIZE_MIN ? Math.ceil(normalized) : FONT_SIZE_MIN
+           })
            .size([this.width, this.height])
            .on('end', onEnd)
            .start()
@@ -49,7 +51,7 @@ class WordcloudStore {
   }
   @action setLoadingD3CloudWords = (d3LoadingWords) => {
     this.isLoading = true
-    this.loadingD3CloudWords = d3LoadingWords
+    this.loadingD3CloudWords = d3LoadingWords.slice()
   }
 
   // LAYOUT --------------------------------------------------------------------
@@ -62,8 +64,7 @@ class WordcloudStore {
     if (this.autorunFirstPass) {
       this.waitingForCloud = true
       this.startLoading()
-      const objsForCloudGen = []
-      wordObjs.forEach((word, i) => objsForCloudGen[i] = Object.assign({}, word))
+      const objsForCloudGen = wordObjs.map((word) => Object.assign({}, word))
       this.asyncCloudGen(objsForCloudGen, this.setD3CloudWords)
     } else {
       this.autorunFirstPass = true // <-- autorun first pass
@@ -72,7 +73,7 @@ class WordcloudStore {
   @action setD3CloudWords = (d3Words) => {
     this.isLoading = false
     this.waitingForCloud = false
-    this.d3CloudWords = d3Words
+    this.d3CloudWords = d3Words.slice()
   }
 
   // DATES ---------------------------------------------------------------------
@@ -134,7 +135,7 @@ class WordcloudStore {
       // array is too large - we can think about this more later perhaps
       return toJS(wordObjsForCloud.slice(0, WORD_ARRAY_MAX_LENGTH))
     } else {
-      return [{text: ` 🦄 no data`, size: 4}, {text: 'try another date range', size: 1}]
+      return [{text: `🦄 no data`, size: 4}, {text: 'try another date range', size: 1}]
     }
   }
   getWordsObjsByDate = (wordsByDate, start, end) => {
@@ -146,7 +147,7 @@ class WordcloudStore {
           if (index > -1) {
             wordObjsByDate[index].size += wordObj.size
           } else {
-            wordObjsByDate.push(toJS(wordObj))
+            wordObjsByDate.push(Object.assign({}, wordObj))
           }
         })
       }
@@ -190,7 +191,7 @@ class WordcloudStore {
   @action getWordsSuccess = (words) => {
     this.receivedOnce = true
     words.forEach(({wordMapDate, wordMapObj: wordObjArray}) => { // <-- we should rename this variable in the collection
-      this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordObjArray.slice())
+      this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordObjArray)
     })
     this.requesting = false
     this.setFilterDates(this.startDate, this.endDate)
