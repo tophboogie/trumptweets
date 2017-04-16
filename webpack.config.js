@@ -10,7 +10,7 @@ module.exports = {
     path: path.join(__dirname, "/frontend/prod"),
     filename: "bundle.js"
   },
-  devtool: "source-map",
+  devtool: "eval",
   module: {
     resolveLoader: {
       root: path.join(__dirname, 'node_modules')

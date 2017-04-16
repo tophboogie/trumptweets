@@ -81,7 +81,7 @@ router.route('/words/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(functi
       $lt: toDate
     }})
     .sort('wordMapDate')
-    .select('wordMapObj')
+    .select('wordMapObj wordMapDate')
     .exec(function (err, wordMap) {
       if (err)
         res.send(err)
