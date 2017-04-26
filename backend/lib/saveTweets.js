@@ -4,7 +4,10 @@ var Mongoose = require('mongoose')
 var BigInt = require('big-integer')
 var Promise = require('promise')
 
-Mongoose.connect('mongodb://localhost/tweets')
+var MONGODB_URI = process.env.MONGODB_URI
+  ? process.env.MONGODB_URI + '/tweets'
+  : 'mongodb://localhost/tweets'
+Mongoose.connect(MONGODB_URI)
 Mongoose.Promise = require('promise')
 
 // save all tweets return promise

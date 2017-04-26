@@ -1,4 +1,3 @@
-var Schedule = require('node-schedule')
 var Mongoose = require('mongoose')
 var Promise = require('promise')
 var Moment = require('moment')

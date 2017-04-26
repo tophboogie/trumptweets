@@ -1,0 +1,32 @@
+.d3__fullscreen {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* TOOLTIPS ----------------------------------------------------------------- */
+.d3__tooltip {
+  position: absolute;
+  background: black;
+  border-radius: 5px;
+  white-space: nowrap;
+  color: pink;
+  padding: 5px 10px;
+  z-index: 10;
+  visibility: hidden;
+}
+.d3__tooltip:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -6px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid black;
+}
