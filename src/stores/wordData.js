@@ -5,7 +5,7 @@ import Moment from 'moment'
 import {extendMoment} from 'moment-range'
 const moment = extendMoment(Moment)
 
-const BASE_URL = '/api/words/'
+const BASE_URL = 'http://localhost:3030/api/words/'
 
 class WordDataStore {
   constructor(who) {
@@ -37,6 +37,7 @@ class WordDataStore {
     const {serverStart, serverEnd, hasAll} = this.getUncachedRange(start, end)
     return new Promise((resolve, reject) => {
       if (hasAll) {
+        console.log('have em')
         resolve(this.getFilteredWordsObjsByDate(start, end))
       } else {
         this.requestWords()
@@ -56,7 +57,9 @@ class WordDataStore {
   getFilteredWordsObjsByDate = (start, end) => {
     const wordObjsByDate = []
     this.wordsByDate.forEach((wordObjs, date) => {
-      if (moment(date) >= moment(start) && moment(date) <= moment(end)) {
+      const dateInbetween = moment(date).format('YYYY-MM-DD') >= moment(start).format('YYYY-MM-DD') &&
+                            moment(date).format('YYYY-MM-DD') <= moment(end).format('YYYY-MM-DD')
+      if (dateInbetween) {
         wordObjs.forEach((wordObj) => {
           const index = wordObjsByDate.findIndex((w) => w.text === wordObj.text)
           if (index > -1) {

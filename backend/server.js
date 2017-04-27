@@ -11,12 +11,14 @@ var MONGODB_URI = process.env.MONGODB_URI
 
 mongoose.connect(MONGODB_URI)
 
-var Tweet = require('./backend/models/tweet.js')
-var WordMap = require('./backend/models/wordMap.js')
+var Tweet = require('./models/tweet.js')
+var WordMap = require('./models/wordMap.js')
 
 var app = express()
 app.use(cors())
-app.use(express.static(__dirname + '/build'))
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname + '/build'))
+}
 
 var router = express.Router()
 
@@ -53,18 +55,6 @@ router.route('/words/:fromMo-:fromDay-:fromYr/to/:toMo-:toDay-:toYr').get(functi
         res.send(err)
       else {
         res.jsonp(wordMap)
-      }
-    })
-})
-
-router.route('/tone').get(function(req, res) {
-  Tone.findOne({})
-    .select('toneType toneScores toneText toneTextDate')
-    .exec(function (err, tone) {
-      if (err)
-        res.send(err)
-      else {
-        res.jsonp(tone)
       }
     })
 })

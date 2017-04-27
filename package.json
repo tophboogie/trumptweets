@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "react-scripts start",
-    "start-heroku": "node server.js",
+    "start-heroku": "node ./backend/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
