@@ -1,7 +1,7 @@
 {
   "name": "trumptweets",
   "version": "1.0.0",
-  "description": "A Twitter scraper that logs Trump's emotional state via IBM Watson API",
+  "description": "A Twitter wordcloud generator for Trump's 'best words'",
   "main": "app.js",
   "scripts": {
     "start": "react-scripts start",
@@ -9,7 +9,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "startApi": "pm2 start backend/api.js --log-date-format 'MM-DD-YYYY HH:mm:ss.SSS'",
+    "startApi": "pm2 start backend/server.js --log-date-format 'MM-DD-YYYY HH:mm:ss.SSS'",
     "startScraper": "pm2 start backend/getNewTweets.js --log-date-format 'MM-DD-YYYY HH:mm:ss.SSS'"
   },
   "repository": {
