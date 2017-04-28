@@ -1,0 +1,59 @@
+/* OVERRIDES ---------------------------------------------------------------- */
+.CalendarDay--blocked-calendar {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.SingleDatePicker:first-of-type .SingleDatePickerInput{
+  border-right: none;
+}
+.SingleDatePicker:last-of-type .SingleDatePickerInput{
+  border-left: none;
+}
+.DateInput {
+  width: 105px;
+}
+.DayPickerKeyboardShortcuts__show {
+  display: none;
+}
+
+/* LAYOUT ------------------------------------------------------------------- */
+.wordcloud_fullscreen {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+/* CONTROLS ----------------------------------------------------------------- */
+.wordcloud__controls {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: opacity ease 0.5s;
+}
+.wordcloud__controls:hover {
+  opacity: 1;
+}
+@media (min-width: 480px) {
+  .wordcloud__controls {
+    top: 22px;
+    left: 22px;
+  }
+}
+
+.wordcloud__controls-spacer {
+  background: white;
+  border-bottom: 1px solid #dbdbdb;
+  border-top: 1px solid #dbdbdb;
+  box-sizing: border-box;
+  color: #555;
+  display: inline-block;
+  font-size: 30px;
+  height: 50px;
+  padding: 8px 5px;
+  vertical-align: middle;
+}

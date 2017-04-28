@@ -1,11 +1,15 @@
 var Mongoose = require('mongoose')
-var Promise = require('promise')
 var Moment = require('moment')
+var Promise = require('promise')
 
 var Tweet = require('./models/tweet.js')
 var getRecentWords = require('./lib/getRecentWords.js')
 
-Mongoose.connect('mongodb://localhost/tweets')
+var MONGODB_URI = process.env.MONGODB_URI
+ ? process.env.MONGODB_URI + '/tweets'
+ : 'mongodb://localhost/tweets'
+
+Mongoose.connect(MONGODB_URI)
 Mongoose.Promise = require('promise')
 
 getFirstDate().done((firstDate) => {

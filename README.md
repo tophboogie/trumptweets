@@ -11,17 +11,17 @@ A Twitter scraper that logs Trump's emotional state via IBM Watson API
     - `vagrant ssh`
     - `cd /vagrant`
 - Install nodejs dependencies:
-    - `npm install`
+    - `yarn install`
 - Grab all available tweets (for initializing the tweets db)
     - `node backend/populateTweetDB.js`
 - Create wordmap database
     - `node backend/populateWordDB.js`
 - Start new tweet scraper
-    - `npm run startScraper`
+    - `yarn run startScraper`
 - Start API
-    - `npm run startApi`
+    - `yarn run startApi`
 - Webpack server
-    - `npm start`
-    - connect at `http://localhost:3000/webpack-dev-server/`
+    - `yarn start`
+    - connect at `http://localhost:3000`
 - Compile front end
-    - `npm run build`
+    - `yarn build`
