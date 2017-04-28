@@ -8,6 +8,8 @@ const Routes = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path={'/'} component={Wordcloud} />
+      <Route exact path={'/:person'} component={Wordcloud} />
+      <Route exact path={'/:person/:start/to/:end'} component={Wordcloud} />
     </Switch>
   </BrowserRouter>
 )

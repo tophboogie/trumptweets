@@ -11,10 +11,10 @@ class Wordcloud extends Component {
     match: PropTypes.object.isRequired
   }
   render() {
-    const {person} = this.props.match.params
+    const {params} = this.props.match
     return (
       <Provider wordcloudStore={wordcloudStore}>
-        <WordcloudLayout person={person} />
+        <WordcloudLayout {...params} />
       </Provider>
     )
   }

@@ -23,9 +23,15 @@ class WordcloudStore {
   constructor() {
     extendObservable(this, {
       // INITALIZE -------------------------------------------------------------
-      init: action((person = 'trump') => {
+      init: action((person = 'trump', start, end) => {
         this.addPerson(person)
         this.setActivePerson(person)
+        this.startDate = start
+          ? moment(start).format('YYYY-MM-DD')
+          : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
+        this.endDate = end
+          ? moment(end).format('YYYY-MM-DD')
+          : moment().startOf('day')
         autorun(() => this.startWordcloud({
           activePerson: this.activePerson,
           start: this.startDate,
@@ -113,11 +119,11 @@ class WordcloudStore {
       }),
 
       // DATES -----------------------------------------------------------------
-      startDate: moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days'),
+      startDate: null,
       onStartDateChange: action((date) => this.startDate = date),
       startDateFocused: false,
       onStartDateFocusChange: action(({focused}) => this.startDateFocused = focused),
-      endDate: moment().startOf('day'),
+      endDate: null,
       onEndDateChange: action((date) => this.endDate = date),
       endDateFocused: false,
       onEndDateFocusChange: action(({focused}) => this.endDateFocused = focused),
