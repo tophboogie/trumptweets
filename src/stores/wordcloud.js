@@ -27,10 +27,10 @@ class WordcloudStore {
         this.addPerson(person)
         this.setActivePerson(person)
         this.startDate = start
-          ? moment(start).format('YYYY-MM-DD')
+          ? moment(start, 'YYYY-MM-DD')
           : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
         this.endDate = end
-          ? moment(end).format('YYYY-MM-DD')
+          ? moment(end, 'YYYY-MM-DD')
           : moment().startOf('day')
         autorun(() => this.startWordcloud({
           activePerson: this.activePerson,
