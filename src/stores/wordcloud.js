@@ -2,6 +2,8 @@ import {observable, extendObservable, action, useStrict, computed, autorun} from
 useStrict(true)
 import moment from 'moment'
 import cloud from 'd3-cloud'
+import createHistory from 'history/createBrowserHistory'
+const history = createHistory()
 
 import WordDataStore from './wordData'
 
@@ -120,11 +122,21 @@ class WordcloudStore {
 
       // DATES -----------------------------------------------------------------
       startDate: null,
-      onStartDateChange: action((date) => this.startDate = date),
+      onStartDateChange: action((date) => {
+        this.startDate = date
+        history.push('/' + this.activePerson + '/'
+          + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
+          + moment(this.endDate).format('YYYY-MM-DD'))
+      }),
       startDateFocused: false,
       onStartDateFocusChange: action(({focused}) => this.startDateFocused = focused),
       endDate: null,
-      onEndDateChange: action((date) => this.endDate = date),
+      onEndDateChange: action((date) => {
+        this.endDate = date
+        history.push('/' + this.activePerson + '/'
+          + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
+          + moment(this.endDate).format('YYYY-MM-DD'))
+      }),
       endDateFocused: false,
       onEndDateFocusChange: action(({focused}) => this.endDateFocused = focused),
 
