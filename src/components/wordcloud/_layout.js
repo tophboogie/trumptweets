@@ -15,8 +15,12 @@ class WordcloudLayout extends Component {
   render() {
     const {person} = this.props
     const {resizeWordcloud} = this.props.wordcloudStore
+    // it's possible we get some kind styling later from the store - inline for now
     return (
-      <div>
+      <div
+        className='wordcloud_fullscreen'
+        style={{background: '#090210'}}
+      >
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
         <WordcloudWords person={person} />
