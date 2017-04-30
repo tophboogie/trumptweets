@@ -16,18 +16,18 @@ class WordDataStore {
       receivedOnce: false,
       isLoading: computed(() => this.requesting),
       error: null,
-      requestWords: action(() => {
+      requestWords: action('data request', () => {
         this.error = null
         this.requesting = true
       }),
-      getWordsSuccess: action((words) => {
+      getWordsSuccess: action('data success', (words) => {
         this.receivedOnce = true
         words.forEach(({wordMapDate, wordMapObj: wordObjArray}) => { // <-- we should rename this variable in the collection
           this.wordsByDate.set(moment(wordMapDate).startOf('day').format(), wordObjArray)
         })
         this.requesting = false
       }),
-      getWordsFailure: action((err) => {
+      getWordsFailure: action('data failure', (err) => {
         this.requesting = false
         this.error = err || 'something happened..'
       })
@@ -37,7 +37,6 @@ class WordDataStore {
     const {serverStart, serverEnd, hasAll} = this.getUncachedRange(start, end)
     return new Promise((resolve, reject) => {
       if (hasAll) {
-        console.log('have em')
         resolve(this.getFilteredWordsObjsByDate(start, end))
       } else {
         this.requestWords()
