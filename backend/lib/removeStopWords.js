@@ -19,6 +19,7 @@ module.exports = (string) => {
         'am',
         'pm',
         'amp',
+        'th',
       //default
         'a',
         'about',
