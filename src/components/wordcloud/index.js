@@ -3,18 +3,22 @@ import PropTypes from 'prop-types'
 import {Provider} from 'mobx-react'
 
 import wordcloudStore from '../../stores/wordcloud'
-import WordcloudLayout from './_layout'
+import WordcloudContainer from './_container'
 import './styles.css'
 
 class Wordcloud extends Component {
   static propTypes = {
-    match: PropTypes.object.isRequired
+    match: PropTypes.shape({
+      params: PropTypes.object.isRequired
+    }),
+    history: PropTypes.object.isRequired
   }
   render() {
+    const {history} = this.props
     const {params} = this.props.match
     return (
       <Provider wordcloudStore={wordcloudStore}>
-        <WordcloudLayout {...params} />
+        <WordcloudContainer history={history} {...params} />
       </Provider>
     )
   }

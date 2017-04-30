@@ -2,8 +2,6 @@ import {observable, extendObservable, action, useStrict, computed, autorun} from
 useStrict(true)
 import moment from 'moment'
 import cloud from 'd3-cloud'
-import createHistory from 'history/createBrowserHistory'
-const history = createHistory()
 
 import WordDataStore from './wordData'
 
@@ -25,15 +23,12 @@ class WordcloudStore {
   constructor() {
     extendObservable(this, {
       // INITALIZE -------------------------------------------------------------
-      init: action((person = 'trump', start, end) => {
-        this.addPerson(person)
-        this.setActivePerson(person)
-        this.startDate = start
-          ? moment(start, 'YYYY-MM-DD')
-          : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
-        this.endDate = end
-          ? moment(end, 'YYYY-MM-DD')
-          : moment().startOf('day')
+      init: action((config) => {
+        this.history = config.history
+        const person = config.person || 'trump'
+        const start = config.start || moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days').format('YYYY-MM-DD')
+        const end = config.end || moment().startOf('day').format('YYYY-MM-DD')
+        this.history.replace('/' + person + '/' + start + '/to/' + end)
         autorun(() => this.startWordcloud({
           activePerson: this.activePerson,
           start: this.startDate,
@@ -41,6 +36,18 @@ class WordcloudStore {
           width: this.width,
           height: this.height
         }))
+      }),
+
+      // SYNC ------------------------------------------------------------------
+      sync: action(({person, start, end}) => {
+        if (!this.people.has(person)) { this.addPerson(person) }
+        this.setActivePerson(person)
+        if (moment(start, 'YYYY-MM-DD').isValid()) {
+          this.startDate = moment(start, 'YYYY-MM-DD')
+        }
+        if (moment(end, 'YYYY-MM-DD').isValid()) {
+          this.endDate = moment(end, 'YYYY-MM-DD')
+        }
       }),
 
       // PEOPLE STUFF ----------------------------------------------------------
@@ -124,18 +131,14 @@ class WordcloudStore {
       startDate: null,
       onStartDateChange: action((date) => {
         this.startDate = date
-        history.push('/' + this.activePerson + '/'
-          + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
-          + moment(this.endDate).format('YYYY-MM-DD'))
+        this.syncHistory()
       }),
       startDateFocused: false,
       onStartDateFocusChange: action(({focused}) => this.startDateFocused = focused),
       endDate: null,
       onEndDateChange: action((date) => {
         this.endDate = date
-        history.push('/' + this.activePerson + '/'
-          + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
-          + moment(this.endDate).format('YYYY-MM-DD'))
+        this.syncHistory()
       }),
       endDateFocused: false,
       onEndDateFocusChange: action(({focused}) => this.endDateFocused = focused),
@@ -168,6 +171,12 @@ class WordcloudStore {
         return minFontSize < 10 ? 10 : minFontSize
       })
     }) // end observables
+  }
+
+  syncHistory = () => {
+    this.history.push('/' + this.activePerson + '/'
+      + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
+      + moment(this.endDate).format('YYYY-MM-DD'))
   }
 
   // GENERATE WORDCLOUD OBJECTS ------------------------------------------------

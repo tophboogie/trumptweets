@@ -10,12 +10,11 @@ import WordcloudLoading from './_loading'
 
 class WordcloudLayout extends Component {
   static propTypes = {
-    start: PropTypes.string,
-    end: PropTypes.string,
-    person: PropTypes.string
+    wordcloudStore: PropTypes.shape({
+      resizeWordcloud: PropTypes.func
+    })
   }
   render() {
-    const {start, end, person} = this.props
     const {resizeWordcloud} = this.props.wordcloudStore
     // it's possible we get some kind styling later from the store - inline for now
     return (
@@ -25,7 +24,7 @@ class WordcloudLayout extends Component {
       >
         <EventListener target={window} onResize={resizeWordcloud} />
         <WordcloudControls />
-        <WordcloudWords start={start} end={end} person={person} />
+        <WordcloudWords />
         <WordcloudMessages />
         <WordcloudLoading />
       </div>
