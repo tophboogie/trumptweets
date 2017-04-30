@@ -16,6 +16,7 @@ const SCREEN_SIZE_BREAKPOINT_2 = 950
 const SCREEN_SIZE_BREAKPOINT_3 = 1425
 
 const loadingWordObjs = [{text: 'loading...', size: 1}]
+const invalidWordObjs = [{text: `invalid`, size: 3}, {text: '⛔️ select a valid range', size: 1}]
 const errorWordObjs = [{text: `oops...`, size: 3}, {text: '⛔️ an error occurred', size: 1}]
 const emptyWordObjs = [{text: `no data`, size: 3}, {text: '🦄 try another date range', size: 1}]
 
@@ -26,46 +27,64 @@ class WordcloudStore {
       init: action('init store', ({history, person, start, end}) => {
         this.history = history
         this.setActivePerson(person || 'trump')
-        this.startDate = start
-        ? moment(start, 'YYYY-MM-DD')
-        : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
-        this.endDate = end
-        ? moment(end, 'YYYY-MM-DD')
-        : moment().startOf('day')
+        this.startDate = moment(start, 'YYYY-MM-DD').isValid()
+          ? moment(start, 'YYYY-MM-DD')
+          : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
+        this.endDate = moment(end, 'YYYY-MM-DD').isValid()
+          ? moment(end, 'YYYY-MM-DD')
+          : moment().startOf('day')
 
-        autorun(() => this.startWordcloud({
-          activePerson: this.activePerson,
-          start: this.startDate,
-          end: this.endDate,
-          width: this.width,
-          height: this.height
-        }))
+        autorun(() => {
+          if (this.dateRangeValid) {
+            this.startWordcloud({
+              activePerson: this.activePerson,
+              start: this.startDate,
+              end: this.endDate,
+              width: this.width,
+              height: this.height
+            })
+          }
+        })
         autorun(() => this.syncHistory({
           person: this.activePerson,
           start: moment(this.startDate).format('YYYY-MM-DD'),
-          end: moment(this.endDate).format('YYYY-MM-DD')
+          end: moment(this.endDate).format('YYYY-MM-DD'),
+          dateRangeValid: this.dateRangeValid
         }))
+        autorun(() => {
+          if (!this.dateRangeValid) {
+            this.createMessageCloud({
+              wordObjs: invalidWordObjs,
+              width: this.width,
+              height: this.height
+            })
+          }
+        })
       }),
 
       // SYNC HISTORY ----------------------------------------------------------
       pathName: null,
-      syncHistory: action('sync browser history', ({person, start, end}) => {
+      syncHistory: action('sync browser history', ({person, start, end, dateRangeValid}) => {
         // first, update state if need be
         if (this.activePerson !== person) { this.setActivePerson(person) }
         if (moment(this.startDate).format('YYYY-MM-DD') !== start) {
-          this.startDate = moment(start, 'YYYY-MM-DD')
+          this.startDate = moment(start, 'YYYY-MM-DD').isValid()
+            ? moment(start, 'YYYY-MM-DD')
+            : null
         }
         if (moment(this.endDate).format('YYYY-MM-DD') !== end) {
-          this.endDate = moment(end, 'YYYY-MM-DD')
+          this.endDate = moment(start, 'YYYY-MM-DD').isValid()
+            ? moment(end, 'YYYY-MM-DD')
+            : null
         }
         // then, we can figure out if we need to push to the history
         const url = '/' + this.activePerson +
                     '/' + moment(this.startDate).format('YYYY-MM-DD') +
                     '/to/' + moment(this.endDate).format('YYYY-MM-DD')
-        if (this.pathName === null && this.history.location.pathname !== url) {
+        if (this.pathName === null && this.history.location.pathname !== url && dateRangeValid) {
           this.pathName = url
           this.history.replace(url)
-        } else if (this.pathName !== url && this.history.location.pathname !== url) {
+        } else if (this.pathName !== url && this.history.location.pathname !== url && dateRangeValid) {
           this.pathName = url
           this.history.push(url)
         }
@@ -156,7 +175,7 @@ class WordcloudStore {
       // DATES -----------------------------------------------------------------
       startDate: null,
       onStartDateChange: action('change start date', (date) => {
-        this.startDate = moment(date).startOf('day')
+        this.startDate = date
       }),
       startDateFocused: false,
       onStartDateFocusChange: action('start date focus', ({focused}) => {
@@ -164,11 +183,18 @@ class WordcloudStore {
       }),
       endDate: null,
       onEndDateChange: action('change end date', (date) => {
-        this.endDate = moment(date).startOf('day')
-    }),
+        this.endDate = date
+      }),
       endDateFocused: false,
       onEndDateFocusChange: action('end date focus', ({focused}) => {
         this.endDateFocused = focused
+      }),
+      datesValid: computed(() => {
+        return moment(this.startDate).isValid() && moment(this.endDate).isValid()
+      }),
+      dateRangeValid: computed(() => {
+        return this.datesValid &&
+          moment(this.startDate).format('YYYY-MM-DD') < moment(this.endDate).format('YYYY-MM-DD')
       }),
 
       // SIZING --------------------------------------------------------------------
