@@ -6,18 +6,12 @@ import D3Renderer from '../d3Renderer'
 
 class WordcloudWords extends Component {
   static propTypes = {
-    person: PropTypes.string,
     wordcloudStore: PropTypes.shape({
       d3CloudWords: PropTypes.array,
       showWordcloud: PropTypes.bool,
       width: PropTypes.number,
       height: PropTypes.number
     })
-  }
-  componentWillMount() {
-    const {person} = this.props
-    const {init} = this.props.wordcloudStore
-    init(person)
   }
   render() {
     const {d3CloudWords, showWordcloud, width, height} = this.props.wordcloudStore
