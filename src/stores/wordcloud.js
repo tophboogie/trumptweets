@@ -42,8 +42,12 @@ class WordcloudStore {
       sync: action(({person, start, end}) => {
         if (!this.people.has(person)) { this.addPerson(person) }
         this.setActivePerson(person)
-        this.startDate = moment(start, 'YYYY-MM-DD')
-        this.endDate = moment(end, 'YYYY-MM-DD')
+        if (moment(start, 'YYYY-MM-DD').isValid()) {
+          this.startDate = moment(start, 'YYYY-MM-DD')
+        }
+        if (moment(end, 'YYYY-MM-DD').isValid()) {
+          this.endDate = moment(end, 'YYYY-MM-DD')
+        }
       }),
 
       // PEOPLE STUFF ----------------------------------------------------------
