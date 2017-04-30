@@ -143,7 +143,6 @@ class WordcloudStore {
       showWordcloud: false,
       d3CloudWords: observable.ref([]),
       startWordcloud: action('(autorun) wordcloud', ({activePerson, start, end, width, height}) => {
-        console.log('starting')
         this.dateRangeFocusedInput = null // <-- clear the date picker dropdown
         this.createLoadingCloud({width, height})
         const person = this.people.get(activePerson)
