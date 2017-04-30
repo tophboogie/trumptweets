@@ -11,7 +11,7 @@ class WordcloudContainer extends Component {
     start: PropTypes.string,
     end: PropTypes.string,
     wordcloudStore: PropTypes.shape({
-      sync: PropTypes.func,
+      syncHistory: PropTypes.func,
       init: PropTypes.func
     })
   }
@@ -21,9 +21,9 @@ class WordcloudContainer extends Component {
     init({history, person, start, end})
   }
   componentWillReceiveProps(nextProps) {
-    const {sync} = this.props.wordcloudStore
+    const {syncHistory} = this.props.wordcloudStore
     const {person, start, end} = nextProps
-    sync({person, start, end})
+    syncHistory({person, start, end})
   }
   render() {
     return <WordcloudLayout />

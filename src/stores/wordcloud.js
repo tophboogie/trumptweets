@@ -23,12 +23,16 @@ class WordcloudStore {
   constructor() {
     extendObservable(this, {
       // INITALIZE -------------------------------------------------------------
-      init: action((config) => {
-        this.history = config.history
-        const person = config.person || 'trump'
-        const start = config.start || moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days').format('YYYY-MM-DD')
-        const end = config.end || moment().startOf('day').format('YYYY-MM-DD')
-        this.history.replace('/' + person + '/' + start + '/to/' + end)
+      init: action('init store', ({history, person, start, end}) => {
+        this.history = history
+        this.setActivePerson(person || 'trump')
+        this.startDate = start
+        ? moment(start, 'YYYY-MM-DD')
+        : moment().startOf('day').subtract(INITIAL_DAYS_BACK, 'days')
+        this.endDate = end
+        ? moment(end, 'YYYY-MM-DD')
+        : moment().startOf('day')
+
         autorun(() => this.startWordcloud({
           activePerson: this.activePerson,
           start: this.startDate,
@@ -36,30 +40,52 @@ class WordcloudStore {
           width: this.width,
           height: this.height
         }))
+        autorun(() => this.syncHistory({
+          person: this.activePerson,
+          start: moment(this.startDate).format('YYYY-MM-DD'),
+          end: moment(this.endDate).format('YYYY-MM-DD')
+        }))
       }),
 
-      // SYNC ------------------------------------------------------------------
-      sync: action(({person, start, end}) => {
-        if (!this.people.has(person)) { this.addPerson(person) }
-        this.setActivePerson(person)
-        if (moment(start, 'YYYY-MM-DD').isValid()) {
+      // SYNC HISTORY ----------------------------------------------------------
+      pathName: null,
+      syncHistory: action('sync browser history', ({person, start, end}) => {
+        // first, update state if need be
+        if (this.activePerson !== person) { this.setActivePerson(person) }
+        if (moment(this.startDate).format('YYYY-MM-DD') !== start) {
           this.startDate = moment(start, 'YYYY-MM-DD')
         }
-        if (moment(end, 'YYYY-MM-DD').isValid()) {
+        if (moment(this.endDate).format('YYYY-MM-DD') !== end) {
           this.endDate = moment(end, 'YYYY-MM-DD')
+        }
+        // then, we can figure out if we need to push to the history
+        const url = '/' + this.activePerson +
+                    '/' + moment(this.startDate).format('YYYY-MM-DD') +
+                    '/to/' + moment(this.endDate).format('YYYY-MM-DD')
+        if (this.pathName === null && this.history.location.pathname !== url) {
+          this.pathName = url
+          this.history.replace(url)
+        } else if (this.pathName !== url && this.history.location.pathname !== url) {
+          this.pathName = url
+          this.history.push(url)
         }
       }),
 
       // PEOPLE STUFF ----------------------------------------------------------
       activePerson: null,
-      setActivePerson: action((person) => this.activePerson = person),
+      setActivePerson: action('set active person', (person) => {
+        if (!this.people.has(person)) { this.addPerson(person) }
+        this.activePerson = person
+      }),
       people: observable.shallowMap(),
-      addPerson: action((person) => this.people.set(person, new WordDataStore(person))),
+      addPerson: action('add person', (person) => {
+        this.people.set(person, new WordDataStore(person))
+      }),
 
       // LOADING --------------------------------------------------------------
       showLoading: false,
       loadingD3CloudWords: observable.ref([]),
-      createLoadingCloud: action(({width, height}) => {
+      createLoadingCloud: action('start loading', ({width, height}) => {
         this.showWordcloud = false
         this.showMessage = false
         this.showLoading = false
@@ -70,7 +96,7 @@ class WordcloudStore {
           onEnd: this.setLoadingD3CloudWords,
         })
       }),
-      setLoadingD3CloudWords: action((d3LoadingWords) => {
+      setLoadingD3CloudWords: action('set loading words', (d3LoadingWords) => {
         this.showLoading = true
         this.loadingD3CloudWords = d3LoadingWords.slice()
       }),
@@ -78,7 +104,7 @@ class WordcloudStore {
       // MESSAGES --------------------------------------------------------------
       showMessage: false,
       messageD3CloudWords: observable.ref([]),
-      createMessageCloud: action(({wordObjs, width, height}) => {
+      createMessageCloud: action('start messages', ({wordObjs, width, height}) => {
         this.showWordcloud = false
         this.showMessage = false
         this.asyncCloudGen({
@@ -88,7 +114,7 @@ class WordcloudStore {
           onEnd: this.setMessageD3CloudWords,
         })
       }),
-      setMessageD3CloudWords: action((d3MessageWords) => {
+      setMessageD3CloudWords: action('set messages words', (d3MessageWords) => {
         this.showMessage = true
         this.showLoading = false // <-- this trumps the loading cloud
         this.messageD3CloudWords = d3MessageWords.slice()
@@ -97,7 +123,7 @@ class WordcloudStore {
       // LAYOUT ----------------------------------------------------------------
       showWordcloud: false,
       d3CloudWords: observable.ref([]),
-      startWordcloud: action(({activePerson, start, end, width, height}) => {
+      startWordcloud: action('(autorun) wordcloud', ({activePerson, start, end, width, height}) => {
         this.dateRangeFocusedInput = null // <-- clear the date picker dropdown
         this.createLoadingCloud({width, height})
         const person = this.people.get(activePerson)
@@ -105,7 +131,7 @@ class WordcloudStore {
           .then((wordObjs) => this.createWordcloud({wordObjs, width, height}))
           .catch((err) => this.createMessageCloud({wordObjs: errorWordObjs, width, height}))
       }),
-      createWordcloud: action(({wordObjs, width, height}) => {
+      createWordcloud: action('start wordcloud', ({wordObjs, width, height}) => {
         const wordcloudWordObjs = wordObjs.slice(0, WORD_ARRAY_MAX_LENGTH)
         wordcloudWordObjs.forEach((word) => word.tooltip = word.size === 1 ? '1 use' : word.size + ' uses')
         this.showWordcloud = false
@@ -120,7 +146,7 @@ class WordcloudStore {
           this.createMessageCloud({wordObjs: emptyWordObjs, width, height})
         }
       }),
-      setD3CloudWords: action((d3Words) => {
+      setD3CloudWords: action('set wordcloud', (d3Words) => {
         this.showMessage = false
         this.showLoading = false
         this.showWordcloud = true
@@ -129,34 +155,36 @@ class WordcloudStore {
 
       // DATES -----------------------------------------------------------------
       startDate: null,
-      onStartDateChange: action((date) => {
-        this.startDate = date
-        this.syncHistory()
+      onStartDateChange: action('change start date', (date) => {
+        this.startDate = moment(date).startOf('day')
       }),
       startDateFocused: false,
-      onStartDateFocusChange: action(({focused}) => this.startDateFocused = focused),
-      endDate: null,
-      onEndDateChange: action((date) => {
-        this.endDate = date
-        this.syncHistory()
+      onStartDateFocusChange: action('start date focus', ({focused}) => {
+        this.startDateFocused = focused
       }),
+      endDate: null,
+      onEndDateChange: action('change end date', (date) => {
+        this.endDate = moment(date).startOf('day')
+    }),
       endDateFocused: false,
-      onEndDateFocusChange: action(({focused}) => this.endDateFocused = focused),
-
+      onEndDateFocusChange: action('end date focus', ({focused}) => {
+        this.endDateFocused = focused
+      }),
 
       // SIZING --------------------------------------------------------------------
       // we need a way to delay the drawing because the onResize events are frequent
       delay: null,
-      resizeWordcloud: action(() => {
+      delayedResize: action('delayed resize', () => {
+        this.setWordcloudSize()
+        this.delay = null
+      }),
+      resizeWordcloud: action('throttle resize', () => {
         this.delay && clearTimeout(this.delay)
-        this.delay = setTimeout(() => {
-          this.setWordcloudSize()
-          this.delay = null
-        }, 500)
+        this.delay = setTimeout(this.delayedResize, 500)
       }),
       width: window.innerWidth,
       height: window.innerHeight,
-      setWordcloudSize: action(() => {
+      setWordcloudSize: action('set wordcloud size', () => {
         this.width = window.innerWidth
         this.height = window.innerHeight
       }),
@@ -171,12 +199,6 @@ class WordcloudStore {
         return minFontSize < 10 ? 10 : minFontSize
       })
     }) // end observables
-  }
-
-  syncHistory = () => {
-    this.history.push('/' + this.activePerson + '/'
-      + moment(this.startDate).format('YYYY-MM-DD') + '/to/'
-      + moment(this.endDate).format('YYYY-MM-DD'))
   }
 
   // GENERATE WORDCLOUD OBJECTS ------------------------------------------------
