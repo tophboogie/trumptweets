@@ -42,12 +42,8 @@ class WordcloudStore {
       sync: action(({person, start, end}) => {
         if (!this.people.has(person)) { this.addPerson(person) }
         this.setActivePerson(person)
-        if (moment(start, 'YYYY-MM-DD').isValid()) {
-          this.startDate = moment(start, 'YYYY-MM-DD')
-        }
-        if (moment(end, 'YYYY-MM-DD').isValid()) {
-          this.endDate = moment(end, 'YYYY-MM-DD')
-        }
+        this.startDate = moment(start, 'YYYY-MM-DD')
+        this.endDate = moment(end, 'YYYY-MM-DD')
       }),
 
       // PEOPLE STUFF ----------------------------------------------------------
@@ -101,7 +97,7 @@ class WordcloudStore {
         this.dateRangeFocusedInput = null // <-- clear the date picker dropdown
         this.createLoadingCloud({width, height})
         const person = this.people.get(activePerson)
-        person.getWords(start, end)
+        person && person.getWords(start, end)
           .then((wordObjs) => this.createWordcloud({wordObjs, width, height}))
           .catch((err) => this.createMessageCloud({wordObjs: errorWordObjs, width, height}))
       }),
