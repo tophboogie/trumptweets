@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # remove trailing slashes except for directories
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+  # redirect https to http
+  RewriteCond %{HTTPS} on
+  RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # remove www
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP_HOST} ^www.(.+)$ [NC]
+  RewriteRule ^(.*)$ http://%1/$1 [R=301,L,NE]
+
+  # redirect all to index except files
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.html [L,NC]
+</IfModule>
+
+# compress output
+SetOutputFilter DEFLATE
+
+# 1 week cache (in seconds)
+# <filesMatch ".(css|jpg|jpeg|png|gif|js|ico|ttf|svg|eot|woff)$">
+# Header set Cache-Control "max-age=604800, public"
+# </filesMatch>
