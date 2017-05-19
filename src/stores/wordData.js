@@ -5,7 +5,9 @@ import Moment from 'moment'
 import {extendMoment} from 'moment-range'
 const moment = extendMoment(Moment)
 
-const BASE_URL = 'http://localhost:3030/api/words/'
+const BASE_URL = process.env.BASE_URL
+  ? process.env.BASE_URL
+  : 'http://localhost:3030/api/words/'
 
 class WordDataStore {
   constructor(who) {
@@ -54,6 +56,9 @@ class WordDataStore {
     })
   }
   getFilteredWordsObjsByDate = (start, end) => {
+    // NOTE: this is pretty inefficient, perhaps it would be better to just created
+    // a massive obj and do a pluck-squash or something, the words really blow up
+    // when the range is large
     const wordObjsByDate = []
     this.wordsByDate.forEach((wordObjs, date) => {
       const dateInbetween = moment(date).format('YYYY-MM-DD') >= moment(start).format('YYYY-MM-DD') &&
