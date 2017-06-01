@@ -11,8 +11,8 @@ var MONGODB_URI = process.env.MONGODB_URI
 
 mongoose.connect(MONGODB_URI)
 
-var Tweet = require('./models/tweet.js')
-var WordMap = require('./models/wordMap.js')
+var Tweet = require('./backend/models/tweet.js')
+var WordMap = require('./backend/models/wordMap.js')
 
 var app = express()
 app.use(cors())
