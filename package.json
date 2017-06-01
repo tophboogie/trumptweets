@@ -21,7 +21,6 @@
   "bugs": {
     "url": "https://github.com/tophboogie/trumptweets/issues"
   },
-  "homepage": "https://github.com/tophboogie/trumptweets#readme",
   "devDependencies": {
     "axios": "^0.16.1",
     "d3": "^4.8.0",
