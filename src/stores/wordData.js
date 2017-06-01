@@ -7,7 +7,7 @@ const moment = extendMoment(Moment)
 
 const BASE_URL = process.env.BASE_URL
   ? process.env.BASE_URL
-  : 'http://localhost:3030/api/words/'
+  : '/api/words/'
 
 class WordDataStore {
   constructor(who) {
