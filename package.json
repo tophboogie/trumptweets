@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "react-scripts start",
-    "start-heroku": "yarn run build && node ./server.js",
+    "start-heroku": "yarn install --production=false && yarn run build && node ./server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
