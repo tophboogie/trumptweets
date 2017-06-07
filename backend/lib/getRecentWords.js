@@ -11,7 +11,7 @@ module.exports = (date) => {
   var dateStr = date.clone().toDate()
   console.log('Getting text for', dateStr)
   return new Promise((resolve, reject) => {
-    getTweetTxt(date).then((tweets) => {
+    getTweetTxt(date.startOf('day')).then((tweets) => {
       saveToDB(getWordMap(tweets), date, getTweetIds(tweets)).done(() => {
         console.log('Saved words for', dateStr)
         resolve()

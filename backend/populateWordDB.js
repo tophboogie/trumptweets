@@ -13,11 +13,11 @@ Mongoose.connect(MONGODB_URI)
 Mongoose.Promise = require('promise')
 
 getFirstDate().done((firstDate) => {
-  var tweetDate = Moment(firstDate)
-  var today = Moment()
+  var tweetDate = Moment(firstDate).startOf('day')
+  var today = Moment().startOf('day')
   recurse()
   function recurse() {
-    if (tweetDate.isBefore(today, 'day')) {
+    if (tweetDate.isSameOrBefore(today, 'day')) {
       getRecentWords(tweetDate).done(() => {
         tweetDate.add(1, 'days')
         recurse()
