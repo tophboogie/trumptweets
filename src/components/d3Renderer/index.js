@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import * as d3 from 'd3'
-const fill = d3.scaleOrdinal(d3.schemeCategory20)
+const fill = d3.scaleOrdinal(['#1B326E','#20C3FF','#F6FFEB','#ED563C','#AD1211'])
 
 import './styles.css'
 
@@ -33,7 +33,7 @@ export default class D3Renderer extends Component {
         .enter()
         .append('text')
         .attr('text-anchor', 'middle')
-        .style('font-family', 'Impact')
+        .style('font-family', 'Reenie Beanie')
         .style('cursor', 'help')
         .on('mouseover', (word) => this._drawTooltip(word))
         .on('mousemove', this._moveTooltip)

@@ -20,6 +20,8 @@ module.exports = (string) => {
         'pm',
         'amp',
         'th',
+        '#',
+        '@',
       //default
         'a',
         'about',

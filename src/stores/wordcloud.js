@@ -234,9 +234,9 @@ class WordcloudStore {
     cloud().words(wordObjs)
            .timeInterval(10)
            .padding(5)
-           .rotate(() => ~~(Math.random() * 2) * 90)
-           .font('Impact').fontSize((wordObj) => {
-             const normalized = wordObj.size * normalizeFontSize
+           .rotate(() => ~~(Math.random() * 2) * 15)
+           .font('Reenie Beanie').fontSize((wordObj) => {
+             const normalized = wordObj.size * normalizeFontSize * 1.8
              return normalized > this.minFontSize ? Math.ceil(normalized) : this.minFontSize
            })
            .size([width, height])

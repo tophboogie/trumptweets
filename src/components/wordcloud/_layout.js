@@ -21,8 +21,9 @@ class WordcloudLayout extends Component {
       <div
         className='wordcloud_fullscreen'
         style={{
-          background: '#090210'
-          // background: '#F7FFFF'
+          //background: '#090210'
+          //background: '#F7FFFF'
+          background: '#9ca8ab'
         }}
       >
         <EventListener target={window} onResize={resizeWordcloud} />

@@ -6,8 +6,8 @@ module.exports = (tweets) => {
   // remove urls
   var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
 
-  // remove other punctuation
-  var puncuationRegex = /[",;.!?%$&':1234567890•\u2026\-\(\)\/\\]+/g
+  // remove all special chars except # and @ for twitter
+  var specialCharsRegex = /[^\w\s@#]/gi
 
   tweets.forEach((tweet) => {
     if (tweet && tweet.tweetText) {
@@ -16,7 +16,7 @@ module.exports = (tweets) => {
         tweet.tweetText.toLowerCase()
         .trim()
         .replace(urlRegex, '')
-        .replace(puncuationRegex, '')
+        .replace(specialCharsRegex, '')
       )
 
       // loop and create one array of words
