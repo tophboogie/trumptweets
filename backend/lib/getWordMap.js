@@ -7,15 +7,16 @@ module.exports = (tweets) => {
   var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
 
   // remove other punctuation
-  var puncuationRegex = /[",;.!?&':1234567890•\u2026-]+/g
+  var puncuationRegex = /[",;.!?%$&':1234567890•\u2026\-\(\)\/\\]+/g
 
   tweets.forEach((tweet) => {
     if (tweet && tweet.tweetText) {
       // remove stop words and run regexs from tweet string
       var tempWords = removeStopWords(
-        tweet.tweetText.toLowerCase().trim()
+        tweet.tweetText.toLowerCase()
+        .trim()
         .replace(urlRegex, '')
-        .replace(puncuationRegex,'')
+        .replace(puncuationRegex, '')
       )
 
       // loop and create one array of words
