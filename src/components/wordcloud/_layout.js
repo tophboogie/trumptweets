@@ -4,9 +4,10 @@ import {inject, observer} from 'mobx-react'
 import EventListener from 'react-event-listener'
 
 import WordcloudWords from './_words'
-import WordcloudControls from './_controls'
 import WordcloudMessages from './_messages'
 import WordcloudLoading from './_loading'
+import Drawer from './_drawer'
+import DrawerToggle from './_drawerToggle'
 
 class WordcloudLayout extends Component {
   static propTypes = {
@@ -27,7 +28,8 @@ class WordcloudLayout extends Component {
         }}
       >
         <EventListener target={window} onResize={resizeWordcloud} />
-        <WordcloudControls />
+        <DrawerToggle />
+        <Drawer />
         <WordcloudWords />
         <WordcloudMessages />
         <WordcloudLoading />

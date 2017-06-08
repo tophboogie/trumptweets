@@ -62,6 +62,12 @@ class WordcloudStore {
         })
       }),
 
+      // DRAWER ----------------------------------------------------------------
+      drawerOpen: true,
+      drawerToggle: action('toggle drawer state', () => {
+        this.drawerOpen = !this.drawerOpen
+      }),
+
       // SYNC HISTORY ----------------------------------------------------------
       pathName: null,
       syncHistory: action('sync browser history', ({person, start, end, dateRangeValid}) => {

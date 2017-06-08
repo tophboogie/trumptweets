@@ -1,3 +1,66 @@
+/* DRAWER ------------------------------------------------------------------- */
+.drawer {
+  position: absolute;
+  background: blue;
+  top: 0;
+  bottom: 0;
+  right: -50%;
+  width: 50%;
+  transition: 1s all ease-in-out;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer_toggle_btn {
+  z-index: 99;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 25px;
+  height: 4px;
+  background: black;
+  display: block;
+  margin-bottom: 3px;
+  opacity: 1;
+  transition: 1s all ease-in-out;
+}
+
+.drawer_toggle_btn.open .bar1 {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.drawer_toggle_btn.open .bar2 {
+  opacity: 0;
+}
+.drawer_toggle_btn.open .bar3 {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}
+
 /* OVERRIDES ---------------------------------------------------------------- */
 .CalendarDay--blocked-calendar {
   opacity: 0.3;
@@ -27,7 +90,7 @@
 }
 
 /* CONTROLS ----------------------------------------------------------------- */
-.wordcloud__controls {
+/*.wordcloud__controls {
   position: fixed;
   top: 18px;
   left: 18px;
@@ -43,7 +106,7 @@
     top: 22px;
     left: 22px;
   }
-}
+}*/
 
 .wordcloud__controls-spacer {
   background: white;
